@@ -1,0 +1,177 @@
+{
+  "weekId": "2026-03-16",
+  "weekLabel": "3月第3周",
+  "generatedAt": "2026-03-16T21:30:00+08:00",
+  "theme": "AI产品经理的新战场与生存法则",
+  "articles": [
+    {
+      "id": "w1a1",
+      "title": "2026年，AI产品经理的下一个战场",
+      "source": "人人都是产品经理",
+      "sourceUrl": "https://www.woshipm.com/ai/6353165.html",
+      "author": "疏桐to b运营",
+      "date": "2026-03-16",
+      "difficulty": 1,
+      "tags": ["趋势", "入门", "职业发展"],
+      "summary": "分析2026年AI PM的核心机遇与技能要求，三大机会窗口：垂直行业、多模态、AI Agent",
+      "keyPoints": [
+        "核心竞争力从'懂不懂AI'变成'快不快'",
+        "三大机会：垂直行业深度AI化、多模态产品化、Agent自主化",
+        "必备技能：Prompt工程、RAG技术、Agent架构",
+        "AI原生思维：不是改造旧产品，而是从0设计"
+      ],
+      "quiz": [
+        {
+          "question": "2026年AI产品经理的核心竞争力是什么？",
+          "options": ["懂不懂AI技术", "快不快（快速响应迭代）", "会不会写代码", "人脉广不广"],
+          "answer": 1,
+          "explanation": "文章指出核心竞争力已从'懂不懂'变成'快不快'，强调快速响应和迭代能力。"
+        },
+        {
+          "question": "以下哪个不是2026年的三大机会窗口？",
+          "options": ["垂直行业深度AI化", "多模态AI产品化", "Web3与区块链", "AI Agent自主化"],
+          "answer": 2,
+          "explanation": "三大机会是垂直行业、多模态、AI Agent，Web3不在此列。"
+        },
+        {
+          "question": "AI原生思维的核心是什么？",
+          "options": ["用AI改造现有产品", "思考没有AI产品是否存在", "追求技术先进性", "尽量多用AI功能"],
+          "answer": 1,
+          "explanation": "AI原生思维要求从0思考，而非简单给旧产品'加AI'。"
+        },
+        {
+          "question": "Agent架构的组成是什么？",
+          "options": ["API + 数据库 + UI", "LLM + 规划 + 记忆 + 工具", "前端 + 后端 + 运维", "模型 + 训练 + 部署"],
+          "answer": 1,
+          "explanation": "文章明确指出Agent = LLM + 规划 + 记忆 + 工具。"
+        }
+      ]
+    },
+    {
+      "id": "w1a2",
+      "title": "2026年AI与产品经理协作指南：效率翻倍的实战PM",
+      "source": "人人都是产品经理",
+      "sourceUrl": "https://www.woshipm.com/ai/6355612.html",
+      "author": "计无施",
+      "date": "2026-03-16",
+      "difficulty": 2,
+      "tags": ["实战", "协作", "效率"],
+      "summary": "7大实战场景让AI成为你的效率杠杆，深度协作vs浅度使用生产力差距3-10倍",
+      "keyPoints": [
+        "两种协作模式：AI赋能型PM vs AI产品经理",
+        "7大场景：用户洞察、创意脑暴、文档效率、快速原型等",
+        "AI初稿+人类精修采纳率60-80%，远高于全AI生成",
+        "守住不可替代的核心：用户共情、跨部门博弈、伦理抉择"
+      ],
+      "quiz": [
+        {
+          "question": "AI赋能型PM的核心逻辑是什么？",
+          "options": ["用AI替代所有工作", "用AI省时间，聚焦高价值决策", "学会AI技术写代码", "让AI做所有决策"],
+          "answer": 1,
+          "explanation": "AI赋能型PM是用AI处理重复工作，自己聚焦决策和判断。"
+        },
+        {
+          "question": "'AI初稿+人类精修'模式的采纳率大约是多少？",
+          "options": ["10-20%", "30-40%", "60-80%", "90-100%"],
+          "answer": 2,
+          "explanation": "文章指出全AI生成采纳率仅10-20%，而AI初稿+人类精修可达60-80%。"
+        },
+        {
+          "question": "以下哪项是PM必须守住的不可替代价值？",
+          "options": ["写PRD文档", "画原型图", "深层用户共情与伦理抉择", "数据统计分析"],
+          "answer": 2,
+          "explanation": "用户共情、跨部门博弈、伦理抉择是AI难以替代的核心能力。"
+        },
+        {
+          "question": "会深度协作的PM与只会复制Prompt的PM，生产力差距是多少？",
+          "options": ["相差不大", "2倍", "3-10倍", "100倍"],
+          "answer": 2,
+          "explanation": "文章明确指出生产力差距可达3-10倍。"
+        }
+      ]
+    },
+    {
+      "id": "w1a3",
+      "title": "AI产品经理的'生死线'：当大模型成为标配",
+      "source": "人人都是产品经理",
+      "sourceUrl": "https://www.woshipm.com/ai/6351497.html",
+      "author": "CW3",
+      "date": "2026-03-11",
+      "difficulty": 2,
+      "tags": ["竞争力", "进阶", "成本"],
+      "summary": "新护城河：场景洞察力、成本把控力、评估体系搭建",
+      "keyPoints": [
+        "AI PM岗位数量同比下滑42%，市场两极分化",
+        "认知转变：从'AI+产品'到'产品+AI'",
+        "三层能力：场景洞察力、成本把控力、评估体系",
+        "需求验证三问法，判断该不该做AI"
+      ],
+      "quiz": [
+        {
+          "question": "2026年Q1，AI产品经理岗位数量变化是？",
+          "options": ["增长42%", "持平", "下滑42%", "下滑10%"],
+          "answer": 2,
+          "explanation": "文章数据显示岗位数量同比下滑42%。"
+        },
+        {
+          "question": "以下哪个是新的核心竞争力？",
+          "options": ["会调用更多API", "场景洞察力和成本把控力", "掌握更多模型参数", "写更复杂的Prompt"],
+          "answer": 1,
+          "explanation": "新护城河是场景洞察力、成本把控力、评估体系，而非单纯技术能力。"
+        },
+        {
+          "question": "模型分层策略可以降低多少成本？",
+          "options": ["10-20%", "20-30%", "40-60%", "80-90%"],
+          "answer": 2,
+          "explanation": "简单任务用小模型，复杂用大模型，可降本40-60%。"
+        },
+        {
+          "question": "用AI解决问题比传统方案提升多少才值得投入？",
+          "options": ["任何提升都值得", ">30%", ">50%", ">100%"],
+          "answer": 2,
+          "explanation": "文章建议提升<30%要慎重，>50%值得投入。"
+        }
+      ]
+    },
+    {
+      "id": "w1a4",
+      "title": "Agentic AI News: Market Growth & Enterprise Adoption",
+      "source": "Boston Institute of Analytics",
+      "sourceUrl": "https://bostoninstituteofanalytics.org/blog/agentic-ai-news-roundup-7-13-march-2026-market-growth-enterprise-adoption-new-ai-agents/",
+      "author": "BIA Research",
+      "date": "2026-03-13",
+      "difficulty": 3,
+      "tags": ["国际", "趋势", "英文", "Agent"],
+      "summary": "国际视角：73%的PM每周使用AI工具，AI从实验期进入核心业务",
+      "keyPoints": [
+        "73% of PMs now use AI tools weekly",
+        "AI从增长模式转向变现策略",
+        "RAG和Agentic AI成为产品设计标配",
+        "PM角色从功能设计者转向AI系统架构师"
+      ],
+      "quiz": [
+        {
+          "question": "根据2026年数据，多少比例的PM每周使用AI工具？",
+          "options": ["23%", "53%", "73%", "93%"],
+          "answer": 2,
+          "explanation": "数据显示73%的PM现在每周使用AI工具。"
+        },
+        {
+          "question": "2026年AI产品的主要转变方向是？",
+          "options": ["从变现到实验", "从实验到核心业务运营", "从核心业务到边缘测试", "从企业到个人"],
+          "answer": 1,
+          "explanation": "AI正从实验期进入核心业务运营阶段。"
+        },
+        {
+          "question": "PM角色正在转变为什么？",
+          "options": ["代码工程师", "AI系统架构师", "数据分析师", "项目经理"],
+          "answer": 1,
+          "explanation": "PM正从功能设计者转向AI系统架构师角色。"
+        }
+      ]
+    }
+  ],
+  "totalQuestions": 15,
+  "passScore": 80,
+  "nextUpdateDate": "2026-03-23"
+}

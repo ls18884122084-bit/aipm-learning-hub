@@ -1,0 +1,197 @@
+{
+  "weekId": "2026-03-23",
+  "weekLabel": "3月第4周",
+  "generatedAt": "2026-03-23T09:00:00+08:00",
+  "theme": "AI Agent时代：从执行者到指挥者的能力跃迁",
+  "articles": [
+    {
+      "id": "w2a1",
+      "title": "2026智能体AI入门指南：6大设计模式详解",
+      "source": "CSDN博客",
+      "sourceUrl": "https://blog.csdn.net/l01011_/article/details/159315361",
+      "author": "大模型研究院",
+      "date": "2026-03-22",
+      "difficulty": 1,
+      "tags": ["入门", "Agent", "设计模式", "架构"],
+      "summary": "系统梳理2026年主流的6大AI智能体设计模式，从ReAct到多智能体协作，帮助初学者建立完整的Agent认知框架",
+      "keyPoints": [
+        "ReAct智能体 = Reasoning + Acting，是市场占有率最高的经典架构",
+        "CodeAct智能体可直接编写执行Python代码，计算精度提升35%，错误率降低80%",
+        "MCP协议让AI像搭积木一样集成工具，代码量减少90%，集成时间提升10倍",
+        "自我反思模式通过三轮迭代可将准确率从65%提升至97%",
+        "多智能体协作将研究时间从8小时缩短至2小时，准确性提升至95%"
+      ],
+      "quiz": [
+        {
+          "question": "ReAct智能体的核心原理是什么？",
+          "options": ["Reading + Acting", "Reasoning + Acting", "Research + Action", "Review + Act"],
+          "answer": 1,
+          "explanation": "ReAct = Reasoning（推理）+ Acting（行动），是目前最受欢迎的智能体架构，通过循环的思考-行动-观察过程完成任务。"
+        },
+        {
+          "question": "CodeAct智能体相比传统智能体的核心突破是什么？",
+          "options": ["只能调用预设API", "可以直接编写和执行代码", "响应速度更快", "成本更低"],
+          "answer": 1,
+          "explanation": "传统智能体只能调用预设的API，而CodeAct智能体可以直接编写和执行Python代码，实现更精确的计算和更复杂的任务处理。"
+        },
+        {
+          "question": "自我反思模式经过三轮迭代后，准确率可以达到多少？",
+          "options": ["65%", "82%", "94%", "97%"],
+          "answer": 3,
+          "explanation": "文章数据显示：初稿准确率65% → 一轮反思后82% → 二轮反思后94% → 三轮反思后97%。"
+        }
+      ]
+    },
+    {
+      "id": "w2a2",
+      "title": "OpenClaw爆火背后：产品经理的工作方式正在被重新定义",
+      "source": "人人都是产品经理",
+      "sourceUrl": "https://www.woshipm.com/ai/6358569.html",
+      "author": "乱七八看",
+      "date": "2026-03-18",
+      "difficulty": 1,
+      "tags": ["趋势", "人机协作", "效率", "入门"],
+      "summary": "OpenClaw实现了AI从'顾问'到'执行者'的革命性跨越，产品经理的核心竞争力从'懂业务'升级为'会指挥AI'",
+      "keyPoints": [
+        "OpenClaw将PRD撰写时间从2-3天缩短至半天",
+        "产品经理新基本功：给AI下达清晰指令、拆解复杂任务、验证AI产出质量",
+        "工作重心从'画原型'转向'定规则'——定义规则、设定边界、优化流程",
+        "未来PM分化为三类：策略型PM、技术型PM、运营型PM"
+      ],
+      "quiz": [
+        {
+          "question": "OpenClaw代表的AI变革核心是什么？",
+          "options": ["AI速度更快", "AI从'顾问'变为'执行者'", "AI成本更低", "AI更容易使用"],
+          "answer": 1,
+          "explanation": "OpenClaw实现了AI从'顾问'到'执行者'的革命性跨越，能直接操作电脑完成实际任务，而非仅提供建议。"
+        },
+        {
+          "question": "文章认为未来产品经理会分化为哪三种类型？",
+          "options": ["初级、中级、高级", "策略型、技术型、运营型", "前端型、后端型、全栈型", "产品型、设计型、研发型"],
+          "answer": 1,
+          "explanation": "文章预测PM将分化为策略型PM（专注战略和洞察）、技术型PM（精通AI工具链）、运营型PM（擅长规模化运营）。"
+        },
+        {
+          "question": "产品经理工作重心的转变方向是？",
+          "options": ["从写文档到写代码", "从画原型到定规则", "从管理到执行", "从线下到线上"],
+          "answer": 1,
+          "explanation": "当AI可以自主完成单点任务时，产品经理的工作重点从'功能设计'（画原型）转向'系统设计'（定规则、设边界、优化流程）。"
+        }
+      ]
+    },
+    {
+      "id": "w2a3",
+      "title": "2026年AI产品经理必学的10大核心技能",
+      "source": "CSDN博客",
+      "sourceUrl": "https://blog.csdn.net/2401_84815887/article/details/158777939",
+      "author": "AI学习笔记",
+      "date": "2026-03-20",
+      "difficulty": 2,
+      "tags": ["技能", "方法论", "进阶", "系统化"],
+      "summary": "AI PM与传统PM的核心差距在思维模型，10大技能分三个能力域：AI技术理解力、产品设计力、商业落地力——三者是乘法关系",
+      "keyPoints": [
+        "AI技术理解力：Prompt工程、数据思维、AI评估",
+        "产品设计力：需求定义三标准（有数据、有标准、能容错）、人机交互设计、MVP设计",
+        "商业落地力：成本结构（算力和API边际成本）、跨角色沟通、AI伦理合规",
+        "2026年合规是准入项：个人信息保护法、AI生成内容标注等不符合要求的产品无法上线"
+      ],
+      "quiz": [
+        {
+          "question": "AI PM的三个能力域之间是什么关系？",
+          "options": ["加法关系", "减法关系", "乘法关系", "除法关系"],
+          "answer": 2,
+          "explanation": "文章明确指出AI技术理解力、产品设计力、商业落地力三个能力域是乘法关系，任何一个域得分是0，总分就是0。"
+        },
+        {
+          "question": "判断一个功能是否适合用AI解决的三个标准是？",
+          "options": ["成本低、速度快、效果好", "有数据、有明确标准、用户能容错", "技术可行、商业可行、团队可行", "用户需要、老板支持、技术成熟"],
+          "answer": 1,
+          "explanation": "文章提出的需求定义三标准：是否有数据、是否有明确标准、用户是否能容错，帮助判断该不该用AI解决问题。"
+        },
+        {
+          "question": "2026年AI产品上线的必要条件是什么？",
+          "options": ["技术最先进", "成本最低", "合规是准入项", "用户量最大"],
+          "answer": 2,
+          "explanation": "文章强调2026年合规是准入项，不符合个人信息保护法、AI生成内容标注等要求的产品无法上线。"
+        }
+      ]
+    },
+    {
+      "id": "w2a4",
+      "title": "2026年AI Agent实战：从玩具到生产力的落地手册",
+      "source": "极客日志",
+      "sourceUrl": "https://zeeklog.com/2026nian-ai-agentshi-zhan-cong-wan-ju-dao-sheng-chan-li-de-luo-di-shou-ce-fu-yuan-ma-9/",
+      "author": "NE0INHK",
+      "date": "2026-03-21",
+      "difficulty": 2,
+      "tags": ["实战", "Agent", "架构", "落地"],
+      "summary": "从零搭建生产级AI Agent的完整方法论：核心架构、混合记忆系统、ReAct框架、工具调用、成本控制全覆盖",
+      "keyPoints": [
+        "AI Agent核心公式：LLM + 记忆 + 规划 + 工具",
+        "六层架构：感知层→大脑层→记忆层→规划层→工具层→行动层",
+        "混合记忆系统：短期（Redis）+ 长期（向量数据库），根据重要性决定存储",
+        "成本构成：LLM Token消耗占45%，智能缓存可降低30-40%成本"
+      ],
+      "quiz": [
+        {
+          "question": "AI Agent的核心定义公式是什么？",
+          "options": ["AI + 数据 + 算法", "LLM + 记忆 + 规划 + 工具", "输入 + 处理 + 输出", "模型 + 训练 + 推理"],
+          "answer": 1,
+          "explanation": "文章明确给出AI Agent的定义公式：AI Agent = LLM（大语言模型）+ 记忆 + 规划 + 工具。"
+        },
+        {
+          "question": "生产级Agent的成本结构中，占比最高的是什么？",
+          "options": ["服务器费用", "LLM Token消耗", "人力成本", "数据库存储"],
+          "answer": 1,
+          "explanation": "文章分析成本构成：LLM Token消耗占45%，是主要成本来源，其次是向量数据库25%。"
+        },
+        {
+          "question": "智能缓存策略可以降低多少成本？",
+          "options": ["10-20%", "30-40%", "50-60%", "70-80%"],
+          "answer": 1,
+          "explanation": "对重复的Prompt进行缓存，命中率可降低30-40%成本，是最有效的降本方法之一。"
+        }
+      ]
+    },
+    {
+      "id": "w2a5",
+      "title": "How AI Is Changing Product Management in 2026",
+      "source": "AI PM Tools",
+      "sourceUrl": "https://aipmtools.org/articles/ai-changing-product-management",
+      "author": "AI PM Tools Research",
+      "date": "2026-02-18",
+      "difficulty": 3,
+      "tags": ["英文", "趋势", "国际", "进阶"],
+      "summary": "AI产品管理经历三波浪潮：分析识别→内容生成→自主代理。PM角色从'执行者'转变为'编排者'，但战略愿景和伦理判断无法被替代",
+      "keyPoints": [
+        "三波浪潮：分析与模式识别(2020-2023) → 内容生成与综合(2023-2025) → 自主代理与决策支持(2025至今)",
+        "AI自动化用户研究：研究周期从数周缩短至数小时",
+        "AI路线图规划：几分钟内生成多种优先级方案，PM聚焦战略辩论而非数据核对",
+        "不可替代的人类要素：战略愿景、利益相关者关系、伦理判断、组织情境理解、创造性问题解决"
+      ],
+      "quiz": [
+        {
+          "question": "AI在产品管理中的第三波浪潮（2025至今）的核心是什么？",
+          "options": ["数据分析", "内容生成", "自主代理与决策支持", "机器学习"],
+          "answer": 2,
+          "explanation": "第三波浪潮的核心是自主代理（Autonomous Agents）与决策支持，AI代理能够自主运行多步骤工作流。"
+        },
+        {
+          "question": "以下哪项是AI无法替代的PM核心价值？",
+          "options": ["数据分析", "文档撰写", "战略愿景与伦理判断", "竞品调研"],
+          "answer": 2,
+          "explanation": "文章强调战略愿景、利益相关者关系、伦理判断、组织情境理解和创造性问题解决是AI无法替代的人类要素。"
+        },
+        {
+          "question": "PM角色在AI时代的转变方向是？",
+          "options": ["从策略到执行", "从执行者到编排者", "从管理到技术", "从线上到线下"],
+          "answer": 1,
+          "explanation": "随着AI代理能力增强，PM的角色从'执行者'转变为'编排者'（Orchestrator），聚焦于协调和决策。"
+        }
+      ]
+    }
+  ],
+  "totalQuestions": 15,
+  "passScore": 80,
+  "nextUpdateDate": "2026-03-30"
+}

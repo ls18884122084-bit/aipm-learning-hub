@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI PM 学习之旅</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #58CC02;
+            --primary-dark: #46A302;
+            --secondary: #1CB0F6;
+            --warning: #FF9600;
+            --danger: #FF4B4B;
+            --purple: #CE82FF;
+            --bg: #FFFFFF;
+            --bg-secondary: #F7F7F7;
+            --text: #3C3C3C;
+            --text-light: #777777;
+            --border: #E5E5E5;
+            --success-bg: #D7FFB8;
+        }
+        
+        /* 深色模式 */
+        [data-theme="dark"] {
+            --bg: #1A1A2E;
+            --bg-secondary: #16213E;
+            --text: #EAEAEA;
+            --text-light: #A0A0A0;
+            --border: #2D2D44;
+            --success-bg: #1E3A1E;
+        }
+        [data-theme="dark"] .article-card:hover {
+            background: #1E2A4A;
+        }
+        [data-theme="dark"] .quiz-option:hover,
+        [data-theme="dark"] .quiz-option.selected {
+            background: #1E2A4A;
+        }
+        [data-theme="dark"] .article-tag {
+            background: var(--bg-secondary);
+        }
+        [data-theme="dark"] .selector-opt.active {
+            background: #1E2A4A;
+        }
+        [data-theme="dark"] .success-overlay {
+            background: rgba(26, 26, 46, 0.98);
+        }
+        body {
+            font-family: 'Noto Sans SC', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* 顶部导航 */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background: var(--bg);
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 100;
+        }
+        .nav-logo {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-stats {
+            display: flex;
+            gap: 16px;
+        }
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .streak { color: var(--warning); }
+        .xp { color: var(--secondary); }
+
+        /* 主容器 */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 72px 16px 90px;
+        }
+        .view { display: none; }
+        .view.active { display: block; }
+
+        /* 页面标题 */
+        .page-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .page-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .page-desc {
+            color: var(--text-light);
+            font-size: 13px;
+        }
+
+        /* 本周推文卡片 */
+        .content-section {
+            margin-bottom: 24px;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .section-badge {
+            font-size: 11px;
+            padding: 2px 8px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 10px;
+        }
+        .article-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .article-card:hover {
+            border-left-color: var(--secondary);
+            transform: translateX(4px);
+        }
+        .article-card.read {
+            opacity: 0.6;
+        }
+        .article-card.read::after {
+            content: '✓ 已读';
+            float: right;
+            font-size: 11px;
+            color: var(--primary);
+        }
+        .article-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .article-meta {
+            font-size: 11px;
+            color: var(--text-light);
+            display: flex;
+            gap: 12px;
+        }
+        .article-tag {
+            display: inline-block;
+            padding: 2px 6px;
+            background: white;
+            border-radius: 4px;
+            font-size: 10px;
+            margin-right: 4px;
+        }
+        .difficulty-1 { color: var(--primary); }
+        .difficulty-2 { color: var(--warning); }
+        .difficulty-3 { color: var(--danger); }
+
+        /* 学习路径 */
+        .path-track {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+        }
+        .path-node {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin: 6px 0;
+            position: relative;
+        }
+        .path-node.locked {
+            background: var(--border);
+            color: #AFAFAF;
+            cursor: not-allowed;
+        }
+        .path-node.available {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 0 var(--primary-dark);
+            animation: pulse 2s infinite;
+        }
+        .path-node.completed {
+            background: var(--success-bg);
+            border: 3px solid var(--primary);
+            color: var(--primary);
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 4px 0 var(--primary-dark), 0 0 0 0 rgba(88, 204, 2, 0.3); }
+            50% { box-shadow: 0 4px 0 var(--primary-dark), 0 0 0 10px rgba(88, 204, 2, 0); }
+        }
+        .path-connector {
+            width: 3px;
+            height: 20px;
+            background: var(--border);
+        }
+        .path-connector.active {
+            background: var(--primary);
+        }
+        .path-label {
+            position: absolute;
+            left: 80px;
+            white-space: nowrap;
+            font-size: 13px;
+        }
+        .path-label .name { font-weight: 600; }
+        .path-label .desc { font-size: 11px; color: var(--text-light); }
+        .stage-badge {
+            background: linear-gradient(135deg, var(--secondary), var(--purple));
+            color: white;
+            padding: 6px 16px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            margin: 16px 0;
+        }
+
+        /* 底部导航 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: var(--bg);
+            border-top: 2px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: var(--text-light);
+            font-size: 10px;
+            font-weight: 600;
+        }
+        .nav-btn:hover { background: var(--bg-secondary); }
+        .nav-btn.active { color: var(--secondary); }
+        .nav-btn .icon { font-size: 22px; }
+
+        /* 弹窗 */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+            z-index: 200;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: var(--bg);
+            width: 100%;
+            max-width: 600px;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .modal-title { font-size: 18px; font-weight: 700; }
+        .modal-close {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: none;
+            background: var(--bg-secondary);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* 按钮 */
+        .btn {
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 0 var(--primary-dark);
+        }
+        .btn-primary:hover { transform: translateY(-2px); }
+        .btn-primary:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--primary-dark); }
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text);
+            box-shadow: 0 4px 0 var(--border);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
+            box-shadow: none;
+        }
+
+        /* 测试界面 */
+        .quiz-container {
+            padding: 20px 0;
+        }
+        .quiz-progress {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .quiz-progress-bar {
+            flex: 1;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .quiz-progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+        .quiz-progress-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-light);
+            min-width: 60px;
+        }
+        .quiz-difficulty {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        .difficulty-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .difficulty-badge.easy { background: #D7FFB8; color: var(--primary-dark); }
+        .difficulty-badge.medium { background: #FFE5B4; color: #B86E00; }
+        .difficulty-badge.hard { background: #FFD4D4; color: #C62828; }
+        .quiz-source {
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            padding: 8px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+        .quiz-question {
+            font-size: 17px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .quiz-option {
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            text-align: left;
+            background: var(--bg);
+        }
+        .quiz-option:hover { border-color: var(--secondary); background: #E5F6FD; }
+        .quiz-option.selected { border-color: var(--secondary); background: #E5F6FD; }
+        .quiz-option.correct { border-color: var(--primary); background: var(--success-bg); }
+        .quiz-option.wrong { border-color: var(--danger); background: #FFEBEB; }
+        .quiz-explanation {
+            margin-top: 16px;
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .quiz-btn { margin-top: 20px; }
+
+        /* 结果页 */
+        .result-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .result-icon {
+            font-size: 72px;
+            margin-bottom: 20px;
+        }
+        .result-score {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .result-score.pass { color: var(--primary); }
+        .result-score.fail { color: var(--warning); }
+        .result-text {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        .result-detail {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+        .result-breakdown {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            text-align: left;
+        }
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+
+        /* 文章阅读 */
+        .article-reader {
+            padding: 20px 0;
+        }
+        .article-reader-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        .article-reader-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .article-reader-content {
+            font-size: 15px;
+            line-height: 1.8;
+        }
+        .article-reader-content h3 {
+            font-size: 16px;
+            margin: 20px 0 12px;
+            color: var(--secondary);
+        }
+        .article-reader-content ul {
+            margin: 12px 0;
+            padding-left: 20px;
+        }
+        .article-reader-content li {
+            margin: 8px 0;
+        }
+        .key-point {
+            background: linear-gradient(120deg, #D7FFB8 0%, #E5F6FD 100%);
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+
+        /* 心得记录 */
+        .journal-input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: none;
+            min-height: 100px;
+            margin-bottom: 12px;
+        }
+        .journal-input:focus { outline: none; border-color: var(--secondary); }
+        .journal-list { margin-top: 20px; }
+        .journal-item {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+        .journal-date {
+            font-size: 11px;
+            color: var(--text-light);
+            margin-bottom: 6px;
+        }
+        .journal-text { font-size: 14px; }
+
+        /* 设置 */
+        .settings-group {
+            margin-bottom: 20px;
+        }
+        .settings-group-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-light);
+        }
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+        .settings-item-label { font-size: 14px; }
+        .settings-item-hint { font-size: 11px; color: var(--text-light); }
+        .toggle {
+            width: 48px;
+            height: 28px;
+            background: var(--border);
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .toggle.active { background: var(--primary); }
+        .toggle::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.2s;
+        }
+        .toggle.active::after { transform: translateX(20px); }
+        .selector {
+            display: flex;
+            gap: 6px;
+        }
+        .selector-opt {
+            padding: 6px 12px;
+            border-radius: 16px;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .selector-opt.active {
+            border-color: var(--secondary);
+            background: #E5F6FD;
+            color: var(--secondary);
+        }
+
+        /* 数据分析 */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
+        .chart-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        .chart-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .skill-bar {
+            margin-bottom: 10px;
+        }
+        .skill-bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+        .skill-bar-track {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .skill-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s;
+        }
+
+        /* 打卡成功 */
+        .success-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,0.98);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 300;
+        }
+        .success-overlay.show { display: flex; }
+        .success-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounceIn 0.5s;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            60% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .success-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+        .success-detail { color: var(--text-light); margin-bottom: 24px; }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-light);
+        }
+        .empty-icon { font-size: 48px; margin-bottom: 12px; }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <nav class="nav">
+        <div class="nav-logo">🚀 AI PM</div>
+        <div class="nav-stats">
+            <div class="stat-item streak">🔥 <span id="streak">0</span></div>
+            <div class="stat-item xp">⚡ <span id="xp">0</span></div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- 首页 - 本周推文 + 学习入口 -->
+        <div id="homeView" class="view active">
+            <div class="page-header">
+                <h1 class="page-title">本周学习</h1>
+                <p class="page-desc">基于最新推文的 AI PM 知识</p>
+            </div>
+
+            <!-- 本周精选推文 -->
+            <div class="content-section">
+                <div class="section-header">
+                    <span class="section-title">📰 本周推文 <span class="section-badge">3月第3周</span></span>
+                    <span id="readProgress" style="font-size: 12px; color: var(--text-light);"></span>
+                </div>
+                <div id="articleList"></div>
+            </div>
+
+            <!-- 开始测试按钮 -->
+            <button class="btn btn-primary" onclick="startWeeklyQuiz()" style="margin-top: 12px;">
+                📝 开始本周测试（15题）
+            </button>
+            <p style="text-align: center; font-size: 12px; color: var(--text-light); margin-top: 8px;">
+                建议阅读推文后再测试，80分合格
+            </p>
+        </div>
+
+        <!-- 学习路径 -->
+        <div id="pathView" class="view">
+            <div class="page-header">
+                <h1 class="page-title">学习路径</h1>
+                <p class="page-desc">12周系统学习计划</p>
+            </div>
+            <div class="path-track" id="pathTrack"></div>
+        </div>
+
+        <!-- 心得记录 -->
+        <div id="journalView" class="view">
+            <div class="page-header">
+                <h1 class="page-title">学习心得</h1>
+                <p class="page-desc">记录成长足迹</p>
+            </div>
+            <textarea class="journal-input" id="journalInput" placeholder="写下今天的学习感悟、新想法..."></textarea>
+            <button class="btn btn-primary" onclick="saveJournal()">保存心得</button>
+            <div class="journal-list" id="journalList"></div>
+        </div>
+
+        <!-- 我的 -->
+        <div id="profileView" class="view">
+            <div class="page-header">
+                <h1 class="page-title">学习报告</h1>
+                <p class="page-desc">你的成长数据</p>
+            </div>
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="statDays">0</div>
+                    <div class="stat-label">学习天数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statLessons">0</div>
+                    <div class="stat-label">完成测试</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statAvgScore">0%</div>
+                    <div class="stat-label">平均分数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statArticles">0</div>
+                    <div class="stat-label">阅读文章</div>
+                </div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">📊 能力成长</div>
+                <div id="skillBars"></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">💡 成长洞察</div>
+                <div id="insights" style="font-size: 13px; line-height: 1.8;"></div>
+            </div>
+        </div>
+
+        <!-- 设置 -->
+        <div id="settingsView" class="view">
+            <div class="page-header">
+                <h1 class="page-title">学习设置</h1>
+                <p class="page-desc">自定义学习体验</p>
+            </div>
+            <div class="settings-group">
+                <div class="settings-group-title">外观</div>
+                <div class="settings-item">
+                    <div>
+                        <div class="settings-item-label">深色模式</div>
+                        <div class="settings-item-hint">减少夜间用眼疲劳</div>
+                    </div>
+                    <div class="toggle" id="darkModeToggle" onclick="toggleDarkMode()"></div>
+                </div>
+            </div>
+            <div class="settings-group">
+                <div class="settings-group-title">学习方向</div>
+                <div class="settings-item">
+                    <div>
+                        <div class="settings-item-label">侧重领域</div>
+                        <div class="settings-item-hint">优先推送相关内容</div>
+                    </div>
+                    <div class="selector" id="focusSelector">
+                        <span class="selector-opt active" data-v="all">全面</span>
+                        <span class="selector-opt" data-v="tech">技术</span>
+                        <span class="selector-opt" data-v="biz">商业</span>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-group">
+                <div class="settings-group-title">难度设置</div>
+                <div class="settings-item">
+                    <div>
+                        <div class="settings-item-label">内容难度</div>
+                        <div class="settings-item-hint">影响推文和测试</div>
+                    </div>
+                    <div class="selector" id="diffSelector">
+                        <span class="selector-opt" data-v="easy">入门</span>
+                        <span class="selector-opt active" data-v="normal">标准</span>
+                        <span class="selector-opt" data-v="hard">进阶</span>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-group">
+                <div class="settings-group-title">提醒</div>
+                <div class="settings-item">
+                    <div>
+                        <div class="settings-item-label">每周更新提醒</div>
+                        <div class="settings-item-hint">周一推送新内容</div>
+                    </div>
+                    <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+                </div>
+            </div>
+            <div class="settings-group">
+                <div class="settings-group-title">数据管理</div>
+                <div class="settings-item" style="cursor: pointer;" onclick="resetProgress()">
+                    <div>
+                        <div class="settings-item-label" style="color: var(--danger);">重置学习进度</div>
+                        <div class="settings-item-hint">清除所有数据，重新开始</div>
+                    </div>
+                    <span style="color: var(--danger);">→</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 底部导航 -->
+    <nav class="bottom-nav">
+        <button class="nav-btn active" onclick="switchView('homeView')">
+            <span class="icon">🏠</span>学习
+        </button>
+        <button class="nav-btn" onclick="switchView('pathView')">
+            <span class="icon">🗺️</span>路径
+        </button>
+        <button class="nav-btn" onclick="switchView('journalView')">
+            <span class="icon">📝</span>心得
+        </button>
+        <button class="nav-btn" onclick="switchView('profileView')">
+            <span class="icon">📊</span>报告
+        </button>
+        <button class="nav-btn" onclick="switchView('settingsView')">
+            <span class="icon">⚙️</span>设置
+        </button>
+    </nav>
+
+    <!-- 文章阅读弹窗 -->
+    <div class="modal-overlay" id="articleModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title">📖 阅读</span>
+                <button class="modal-close" onclick="closeArticleModal()">✕</button>
+            </div>
+            <div class="article-reader" id="articleReader"></div>
+            <button class="btn btn-primary" onclick="markArticleRead()">✓ 已读完，返回</button>
+        </div>
+    </div>
+
+    <!-- 测试弹窗 -->
+    <div class="modal-overlay" id="quizModal">
+        <div class="modal" style="border-radius: 20px; max-height: 90vh;">
+            <div id="quizContent"></div>
+        </div>
+    </div>
+
+    <!-- 打卡成功 -->
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-icon">🎉</div>
+        <div class="success-title">打卡成功！</div>
+        <div class="success-detail" id="successDetail"></div>
+        <button class="btn btn-primary" style="width: auto; padding: 12px 40px;" onclick="closeSuccess()">太棒了</button>
+    </div>
+
+    <script>
+        // ========== 数据 ==========
+        const WEEKLY_ARTICLES = [
+            {
+                id: 'w1a1',
+                title: '2026年，AI产品经理的下一个战场',
+                source: '人人都是产品经理',
+                date: '2026-03-16',
+                difficulty: 1,
+                tags: ['趋势', '入门'],
+                url: 'https://www.woshipm.com/ai/6353165.html',
+                summary: '分析2026年AI PM的核心机遇与技能要求',
+                content: `
+                    <h3>核心观点</h3>
+                    <p>2026年是大模型从"元年"到"常态"的关键转折。AI产品经理的核心竞争力已从"懂不懂AI"变成了"快不快"。</p>
+                    
+                    <div class="key-point">💡 关键洞察：这不是短期风口，而是持续20年的长期趋势</div>
+                    
+                    <h3>三大机会窗口</h3>
+                    <ul>
+                        <li><strong>垂直行业深度AI化</strong> — 医疗、法律、金融等领域需要复合型人才</li>
+                        <li><strong>多模态AI产品化</strong> — 文生视频、数字人、具身智能爆发</li>
+                        <li><strong>AI Agent自主化</strong> — 从辅助工具进化为自主智能体</li>
+                    </ul>
+                    
+                    <h3>必备技能</h3>
+                    <ul>
+                        <li><strong>Prompt工程</strong> — 任务说明、上下文、问题、输出格式四要素</li>
+                        <li><strong>RAG技术</strong> — 检索增强生成，解决大模型幻觉问题</li>
+                        <li><strong>Agent架构</strong> — LLM + 规划 + 记忆 + 工具</li>
+                    </ul>
+                    
+                    <div class="key-point">🎯 AI原生思维：不是"怎么改造旧产品"，而是"没有AI这个产品是否存在"</div>
+                `,
+                quiz: [
+                    { q: '2026年AI产品经理的核心竞争力是什么？', opts: ['懂不懂AI技术', '快不快（快速响应迭代）', '会不会写代码', '人脉广不广'], ans: 1, exp: '文章指出核心竞争力已从"懂不懂"变成"快不快"，强调快速响应和迭代能力。' },
+                    { q: '以下哪个不是2026年的三大机会窗口？', opts: ['垂直行业深度AI化', '多模态AI产品化', 'Web3与区块链', 'AI Agent自主化'], ans: 2, exp: '三大机会是垂直行业、多模态、AI Agent，Web3不在此列。' },
+                    { q: 'AI原生思维的核心是什么？', opts: ['用AI改造现有产品', '思考没有AI产品是否存在', '追求技术先进性', '尽量多用AI功能'], ans: 1, exp: 'AI原生思维要求从0思考，而非简单给旧产品"加AI"。' }
+                ]
+            },
+            {
+                id: 'w1a2',
+                title: '2026年AI与产品经理协作指南：效率翻倍的实战PM',
+                source: '人人都是产品经理',
+                date: '2026-03-16',
+                difficulty: 2,
+                tags: ['实战', '协作'],
+                url: 'https://www.woshipm.com/ai/6355612.html',
+                summary: '7大实战场景让AI成为你的效率杠杆',
+                content: `
+                    <h3>两种协作模式</h3>
+                    <ul>
+                        <li><strong>AI赋能型PM</strong> — 用AI省时间，聚焦高价值决策（适合大多数PM）</li>
+                        <li><strong>AI产品经理</strong> — 深耕技术做产品，做技术与商业的桥梁</li>
+                    </ul>
+                    
+                    <h3>7大高效场景</h3>
+                    <ul>
+                        <li>用户洞察：AI几分钟完成多源数据整合</li>
+                        <li>创意脑暴：AI生成Feature Ideas并多维度打分</li>
+                        <li>文档效率：AI起草初稿，节省80%时间</li>
+                        <li>快速原型：Prompt生成可点击MVP</li>
+                        <li>战略决策：AI扫描行业信号辅助判断</li>
+                        <li>数据闭环：AI自动监控异常并建议迭代</li>
+                        <li>人机协作：找到"AI初稿+人类精修"的最佳分界</li>
+                    </ul>
+                    
+                    <div class="key-point">⚡ 效率差异：深度协作的PM vs 只会复制Prompt的PM，生产力差距3-10倍</div>
+                    
+                    <h3>协作心法</h3>
+                    <ul>
+                        <li>把AI当"极度字面的初级队友"，给足上下文</li>
+                        <li>建立专属Prompt模板库，复用提效</li>
+                        <li>与AI辩论推演逻辑，补齐思维漏洞</li>
+                        <li>守住AI无法替代的核心：用户共情、跨部门博弈、伦理抉择</li>
+                    </ul>
+                `,
+                quiz: [
+                    { q: 'AI赋能型PM的核心逻辑是什么？', opts: ['用AI替代所有工作', '用AI省时间，聚焦高价值决策', '学会AI技术写代码', '让AI做所有决策'], ans: 1, exp: 'AI赋能型PM是用AI处理重复工作，自己聚焦决策和判断。' },
+                    { q: '"AI初稿+人类精修"模式的采纳率大约是多少？', opts: ['10-20%', '30-40%', '60-80%', '90-100%'], ans: 2, exp: '文章指出全AI生成采纳率仅10-20%，而AI初稿+人类精修可达60-80%。' },
+                    { q: '以下哪项是PM必须守住的不可替代价值？', opts: ['写PRD文档', '画原型图', '深层用户共情与伦理抉择', '数据统计分析'], ans: 3, exp: '用户共情、跨部门博弈、伦理抉择是AI难以替代的核心能力。' },
+                    { q: '会深度协作的PM与只会复制Prompt的PM，生产力差距是多少？', opts: ['相差不大', '2倍', '3-10倍', '100倍'], ans: 2, exp: '文章明确指出生产力差距可达3-10倍。' }
+                ]
+            },
+            {
+                id: 'w1a3',
+                title: 'AI产品经理的"生死线"：当大模型成为标配',
+                source: '人人都是产品经理',
+                date: '2026-03-11',
+                difficulty: 2,
+                tags: ['竞争力', '进阶'],
+                url: 'https://www.woshipm.com/ai/6351497.html',
+                summary: '新护城河：场景洞察力、成本把控力、评估体系',
+                content: `
+                    <h3>行业现状</h3>
+                    <ul>
+                        <li>AI产品经理岗位数量同比下滑42%</li>
+                        <li>淘汰"伪AI PM"（仅会调API），高薪抢夺资深专家</li>
+                        <li>67%企业反馈AI功能使用率低于预期</li>
+                    </ul>
+                    
+                    <div class="key-point">🔄 认知转变：从"AI+产品"转向"产品+AI"——业务需要什么，看AI是否为最优解</div>
+                    
+                    <h3>新的三层能力模型</h3>
+                    <ul>
+                        <li><strong>场景洞察力</strong> — 比用户更懂真实需求，不只是懂技术</li>
+                        <li><strong>成本把控力</strong> — 模型分层（降本40-60%）、缓存策略、预计算</li>
+                        <li><strong>评估体系</strong> — 准确性>85%、P95延迟<2秒、使用率>30%</li>
+                    </ul>
+                    
+                    <h3>需求验证三问法</h3>
+                    <ul>
+                        <li>这个问题不用AI能解决吗？</li>
+                        <li>用AI比传统方案好多少？（<30%慎重，>50%值得）</li>
+                        <li>这个优势能持续多久？</li>
+                    </ul>
+                    
+                    <h3>2026三个机会点</h3>
+                    <ul>
+                        <li>垂直行业的"AI原生工作流"</li>
+                        <li>AI产品的"可解释性"建立信任</li>
+                        <li>人机协作的"边界设计"</li>
+                    </ul>
+                `,
+                quiz: [
+                    { q: '2026年Q1，AI产品经理岗位数量变化是？', opts: ['增长42%', '持平', '下滑42%', '下滑10%'], ans: 2, exp: '文章数据显示岗位数量同比下滑42%。' },
+                    { q: '以下哪个是新的核心竞争力？', opts: ['会调用更多API', '场景洞察力和成本把控力', '掌握更多模型参数', '写更复杂的Prompt'], ans: 1, exp: '新护城河是场景洞察力、成本把控力、评估体系，而非单纯技术能力。' },
+                    { q: '模型分层策略可以降低多少成本？', opts: ['10-20%', '20-30%', '40-60%', '80-90%'], ans: 2, exp: '简单任务用小模型，复杂用大模型，可降本40-60%。' },
+                    { q: '用AI解决问题比传统方案提升多少才值得投入？', opts: ['任何提升都值得', '>30%', '>50%', '>100%'], ans: 2, exp: '文章建议提升<30%要慎重，>50%值得投入。' }
+                ]
+            },
+            {
+                id: 'w1a4',
+                title: 'AI Product Management Trends Reshaping 2026',
+                source: 'LinkedIn / Boston Institute',
+                date: '2026-03-13',
+                difficulty: 3,
+                tags: ['国际', '趋势', '英文'],
+                url: 'https://bostoninstituteofanalytics.org/blog/agentic-ai-news-roundup-7-13-march-2026-market-growth-enterprise-adoption-new-ai-agents/',
+                summary: 'Agentic AI市场增长与企业采用趋势',
+                content: `
+                    <h3>Global Trends</h3>
+                    <ul>
+                        <li><strong>Agentic AI Market Growth</strong> — 企业级Agent采用率快速增长</li>
+                        <li><strong>73% of PMs use AI weekly</strong> — AI工具已成为PM标配</li>
+                        <li><strong>From experimentation to core operations</strong> — AI从实验期进入核心业务</li>
+                    </ul>
+                    
+                    <div class="key-point">🌍 国际视角：2026年AI从"增长模式"转向"变现策略"</div>
+                    
+                    <h3>Key Developments</h3>
+                    <ul>
+                        <li>RAG和Agentic AI成为产品设计标配</li>
+                        <li>多模态能力（文本、图像、视频）融合</li>
+                        <li>AI治理与合规成为必修课</li>
+                        <li>边缘推理技术降低延迟和成本</li>
+                    </ul>
+                    
+                    <h3>PM角色转变</h3>
+                    <ul>
+                        <li>从功能设计者到AI系统架构师</li>
+                        <li>从需求文档到Agent编排设计</li>
+                        <li>从用户调研到数据飞轮设计</li>
+                    </ul>
+                `,
+                quiz: [
+                    { q: '根据2026年数据，多少比例的PM每周使用AI工具？', opts: ['23%', '53%', '73%', '93%'], ans: 2, exp: '数据显示73%的PM现在每周使用AI工具。' },
+                    { q: '2026年AI产品的主要转变方向是？', opts: ['从变现到实验', '从实验到核心业务运营', '从核心业务到边缘测试', '从企业到个人'], ans: 1, exp: 'AI正从实验期进入核心业务运营阶段。' }
+                ]
+            }
+        ];
+
+        // 根据文章生成完整的15题测试（按难度渐进）
+        function generateWeeklyQuiz() {
+            let allQuestions = [];
+            
+            WEEKLY_ARTICLES.forEach(article => {
+                article.quiz.forEach(q => {
+                    allQuestions.push({
+                        ...q,
+                        source: article.title,
+                        sourceUrl: article.url,
+                        difficulty: article.difficulty
+                    });
+                });
+            });
+            
+            // 按难度排序：简单 → 中等 → 困难
+            allQuestions.sort((a, b) => a.difficulty - b.difficulty);
+            
+            // 取前15题
+            return allQuestions.slice(0, 15);
+        }
+
+        // 学习路径数据
+        const PATH_STAGES = [
+            { id: 1, name: '🌱 入门期', weeks: [
+                { id: 1, icon: '🎯', name: 'AI PM 认知', desc: '了解角色定位' },
+                { id: 2, icon: '🧠', name: '技术地图', desc: 'LLM基础概念' },
+                { id: 3, icon: '💬', name: 'Prompt工程', desc: '与AI对话技巧' },
+                { id: 4, icon: '📊', name: '产品方法论', desc: '需求分析基础' }
+            ]},
+            { id: 2, name: '📈 进阶期', weeks: [
+                { id: 5, icon: '🔍', name: 'RAG技术', desc: '检索增强生成' },
+                { id: 6, icon: '🤖', name: 'AI Agent', desc: '智能体设计' },
+                { id: 7, icon: '💰', name: '商业化', desc: '变现与成本' },
+                { id: 8, icon: '⚖️', name: '伦理合规', desc: '负责任的AI' }
+            ]},
+            { id: 3, name: '🎯 实战期', weeks: [
+                { id: 9, icon: '🛠️', name: '实战项目I', desc: 'AI客服设计' },
+                { id: 10, icon: '📱', name: '实战项目II', desc: 'AI写作助手' },
+                { id: 11, icon: '📁', name: '作品集', desc: '展示你的价值' },
+                { id: 12, icon: '🎓', name: '求职冲刺', desc: '赢得Offer' }
+            ]}
+        ];
+
+        // ========== 状态管理 ==========
+        let appState = loadState();
+        let currentQuiz = [];
+        let quizIndex = 0;
+        let quizCorrect = 0;
+        let currentArticle = null;
+
+        function loadState() {
+            const saved = localStorage.getItem('aipm_v2_state');
+            return saved ? JSON.parse(saved) : {
+                xp: 0,
+                streak: 0,
+                maxStreak: 0,
+                lastCheckIn: null,
+                completedWeeks: [],
+                readArticles: [],
+                quizScores: [],
+                journals: [],
+                settings: { focus: 'all', difficulty: 'normal' },
+                stats: { totalDays: 0 }
+            };
+        }
+
+        function saveState() {
+            localStorage.setItem('aipm_v2_state', JSON.stringify(appState));
+        }
+
+        // ========== 视图切换 ==========
+        const viewMap = {
+            'homeView': 0,
+            'pathView': 1,
+            'journalView': 2,
+            'profileView': 3,
+            'settingsView': 4
+        };
+        
+        function switchView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === viewMap[viewId]);
+            });
+            
+            if (viewId === 'pathView') renderPath();
+            if (viewId === 'journalView') renderJournals();
+            if (viewId === 'profileView') renderProfile();
+        }
+
+        // ========== 文章列表 ==========
+        function renderArticles() {
+            const list = document.getElementById('articleList');
+            const readCount = appState.readArticles.filter(id => 
+                WEEKLY_ARTICLES.some(a => a.id === id)
+            ).length;
+            
+            // 更新阅读进度
+            const progressEl = document.getElementById('readProgress');
+            if (progressEl) {
+                progressEl.textContent = `已读 ${readCount}/${WEEKLY_ARTICLES.length}`;
+                progressEl.style.color = readCount === WEEKLY_ARTICLES.length ? 'var(--primary)' : 'var(--text-light)';
+            }
+            
+            list.innerHTML = WEEKLY_ARTICLES.map(a => {
+                const isRead = appState.readArticles.includes(a.id);
+                return `
+                    <div class="article-card ${isRead ? 'read' : ''}" onclick="openArticle('${a.id}')">
+                        <div class="article-title">${a.title}</div>
+                        <div class="article-meta">
+                            <span>${a.source}</span>
+                            <span class="difficulty-${a.difficulty}">${['⭐简单','⭐⭐中等','⭐⭐⭐进阶'][a.difficulty-1]}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openArticle(id) {
+            currentArticle = WEEKLY_ARTICLES.find(a => a.id === id);
+            if (!currentArticle) return;
+            
+            document.getElementById('articleReader').innerHTML = `
+                <div class="article-reader-title">${currentArticle.title}</div>
+                <div class="article-reader-meta">
+                    <span>📰 ${currentArticle.source}</span>
+                    <span>📅 ${currentArticle.date}</span>
+                </div>
+                <div class="article-reader-content">${currentArticle.content}</div>
+                <div style="margin-top: 20px; padding: 12px; background: var(--bg-secondary); border-radius: 10px; font-size: 12px;">
+                    <strong>原文链接：</strong><a href="${currentArticle.url}" target="_blank" style="color: var(--secondary);">点击查看完整文章 →</a>
+                </div>
+            `;
+            document.getElementById('articleModal').classList.add('active');
+        }
+
+        function closeArticleModal() {
+            document.getElementById('articleModal').classList.remove('active');
+        }
+
+        function markArticleRead() {
+            if (currentArticle && !appState.readArticles.includes(currentArticle.id)) {
+                appState.readArticles.push(currentArticle.id);
+                appState.xp += 5;
+                saveState();
+                updateTopStats();
+                renderArticles();
+            }
+            closeArticleModal();
+        }
+
+        // ========== 测试系统 ==========
+        function startWeeklyQuiz() {
+            currentQuiz = generateWeeklyQuiz();
+            quizIndex = 0;
+            quizCorrect = 0;
+            document.getElementById('quizModal').classList.add('active');
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            if (quizIndex >= currentQuiz.length) {
+                showQuizResult();
+                return;
+            }
+            
+            const q = currentQuiz[quizIndex];
+            const progress = ((quizIndex + 1) / currentQuiz.length) * 100;
+            const diffLabels = ['easy', 'medium', 'hard'];
+            const diffTexts = ['简单', '中等', '困难'];
+            
+            document.getElementById('quizContent').innerHTML = `
+                <div class="quiz-container">
+                    <div class="quiz-progress">
+                        <div class="quiz-progress-bar">
+                            <div class="quiz-progress-fill" style="width: ${progress}%"></div>
+                        </div>
+                        <span class="quiz-progress-text">${quizIndex + 1} / ${currentQuiz.length}</span>
+                    </div>
+                    
+                    <div class="quiz-difficulty">
+                        <span class="difficulty-badge ${diffLabels[q.difficulty-1]}">${diffTexts[q.difficulty-1]}</span>
+                    </div>
+                    
+                    <div class="quiz-source">
+                        📖 来源：${q.source}
+                    </div>
+                    
+                    <p class="quiz-question">${q.q}</p>
+                    
+                    <div class="quiz-options">
+                        ${q.opts.map((opt, i) => `
+                            <div class="quiz-option" data-idx="${i}" onclick="selectQuizOption(${i})">${opt}</div>
+                        `).join('')}
+                    </div>
+                    
+                    <div id="quizFeedback"></div>
+                    <button class="btn btn-primary quiz-btn" id="quizNextBtn" style="display:none" onclick="nextQuizQuestion()">继续</button>
+                </div>
+            `;
+        }
+
+        function selectQuizOption(idx) {
+            const q = currentQuiz[quizIndex];
+            const options = document.querySelectorAll('.quiz-option');
+            const isCorrect = idx === q.ans;
+            
+            options.forEach((opt, i) => {
+                opt.style.pointerEvents = 'none';
+                if (i === q.ans) opt.classList.add('correct');
+                else if (i === idx && !isCorrect) opt.classList.add('wrong');
+            });
+            
+            if (isCorrect) quizCorrect++;
+            
+            document.getElementById('quizFeedback').innerHTML = `
+                <div class="quiz-explanation">
+                    <strong style="color: ${isCorrect ? 'var(--primary)' : 'var(--danger)'}">
+                        ${isCorrect ? '✓ 正确！' : '✗ 错误'}
+                    </strong>
+                    <p style="margin-top: 8px;">${q.exp}</p>
+                </div>
+            `;
+            document.getElementById('quizNextBtn').style.display = 'block';
+        }
+
+        function nextQuizQuestion() {
+            quizIndex++;
+            renderQuizQuestion();
+        }
+
+        function showQuizResult() {
+            const score = Math.round((quizCorrect / currentQuiz.length) * 100);
+            const passed = score >= 80;
+            
+            // 统计各难度正确率
+            let easyCorrect = 0, easyTotal = 0;
+            let medCorrect = 0, medTotal = 0;
+            let hardCorrect = 0, hardTotal = 0;
+            
+            currentQuiz.forEach((q, i) => {
+                // 简化统计（实际需要记录每题对错）
+                if (q.difficulty === 1) easyTotal++;
+                if (q.difficulty === 2) medTotal++;
+                if (q.difficulty === 3) hardTotal++;
+            });
+            
+            document.getElementById('quizContent').innerHTML = `
+                <div class="result-container">
+                    <div class="result-icon">${passed ? '🎉' : '💪'}</div>
+                    <div class="result-score ${passed ? 'pass' : 'fail'}">${score}分</div>
+                    <div class="result-text">${passed ? '恭喜通过！' : '继续加油！'}</div>
+                    <div class="result-detail">答对 ${quizCorrect} / ${currentQuiz.length} 题 · ${passed ? '已达到80分合格线' : '需达到80分合格'}</div>
+                    
+                    <div class="result-breakdown">
+                        <div class="breakdown-item">
+                            <span>⭐ 简单题</span>
+                            <span>${easyTotal} 题</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span>⭐⭐ 中等题</span>
+                            <span>${medTotal} 题</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span>⭐⭐⭐ 困难题</span>
+                            <span>${hardTotal} 题</span>
+                        </div>
+                    </div>
+                    
+                    <button class="btn ${passed ? 'btn-primary' : 'btn-secondary'}" onclick="closeQuiz(${passed}, ${score})">
+                        ${passed ? '完成打卡' : '返回复习'}
+                    </button>
+                </div>
+            `;
+        }
+
+        function closeQuiz(passed, score) {
+            document.getElementById('quizModal').classList.remove('active');
+            
+            if (passed) {
+                appState.quizScores.push({ date: new Date().toLocaleDateString(), score });
+                appState.xp += 30;
+                checkStreak();
+                saveState();
+                showSuccess(score);
+            }
+            
+            updateTopStats();
+        }
+
+        function checkStreak() {
+            const today = new Date().toDateString();
+            if (appState.lastCheckIn === today) return;
+            
+            const yesterday = new Date(Date.now() - 86400000).toDateString();
+            appState.streak = (appState.lastCheckIn === yesterday) ? appState.streak + 1 : 1;
+            if (appState.streak > appState.maxStreak) appState.maxStreak = appState.streak;
+            appState.lastCheckIn = today;
+            appState.stats.totalDays++;
+        }
+
+        function showSuccess(score) {
+            document.getElementById('successDetail').textContent = `得分 ${score}分 · +30 XP · 连续学习 ${appState.streak} 天`;
+            document.getElementById('successOverlay').classList.add('show');
+        }
+
+        function closeSuccess() {
+            document.getElementById('successOverlay').classList.remove('show');
+        }
+
+        // ========== 学习路径 ==========
+        function renderPath() {
+            const track = document.getElementById('pathTrack');
+            let html = '';
+            
+            PATH_STAGES.forEach(stage => {
+                html += `<span class="stage-badge">${stage.name}</span>`;
+                
+                stage.weeks.forEach((week, i) => {
+                    const isCompleted = appState.completedWeeks.includes(week.id);
+                    const prevCompleted = week.id === 1 || appState.completedWeeks.includes(week.id - 1);
+                    const isAvailable = prevCompleted && !isCompleted;
+                    
+                    if (i > 0) {
+                        html += `<div class="path-connector ${isCompleted || isAvailable ? 'active' : ''}"></div>`;
+                    }
+                    
+                    html += `
+                        <div class="path-node ${isCompleted ? 'completed' : ''} ${isAvailable ? 'available' : ''} ${!isCompleted && !isAvailable ? 'locked' : ''}" 
+                             onclick="handlePathClick(${week.id}, ${isAvailable}, ${isCompleted})">
+                            ${week.icon}
+                            <div class="path-label">
+                                <div class="name">${week.name}</div>
+                                <div class="desc">${week.desc}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+            
+            track.innerHTML = html;
+        }
+        
+        function handlePathClick(weekId, isAvailable, isCompleted) {
+            if (isCompleted) {
+                // 已完成，显示复习提示
+                alert(`✅ 第${weekId}周已完成！你可以随时复习。`);
+            } else if (isAvailable) {
+                // 可解锁，确认开始
+                if (confirm(`🎯 开始第${weekId}周的学习？\n\n完成本周测试后即可解锁下一周！`)) {
+                    // 模拟完成（实际应该跳转到对应课程）
+                    appState.completedWeeks.push(weekId);
+                    appState.xp += 50;
+                    saveState();
+                    updateTopStats();
+                    renderPath();
+                    showSuccess(100);
+                    document.getElementById('successDetail').textContent = `第${weekId}周学习完成 · +50 XP`;
+                }
+            } else {
+                // 锁定状态
+                alert(`🔒 请先完成第${weekId - 1}周的学习！`);
+            }
+        }
+
+        // ========== 心得记录 ==========
+        function saveJournal() {
+            const input = document.getElementById('journalInput');
+            const text = input.value.trim();
+            if (!text) return;
+            
+            appState.journals.unshift({
+                date: new Date().toLocaleDateString(),
+                text
+            });
+            appState.xp += 10;
+            saveState();
+            input.value = '';
+            renderJournals();
+            updateTopStats();
+        }
+
+        function renderJournals() {
+            const list = document.getElementById('journalList');
+            if (appState.journals.length === 0) {
+                list.innerHTML = '<div class="empty-state"><div class="empty-icon">📝</div><p>还没有心得，写下你的第一条吧</p></div>';
+                return;
+            }
+            list.innerHTML = appState.journals.map(j => `
+                <div class="journal-item">
+                    <div class="journal-date">${j.date}</div>
+                    <div class="journal-text">${j.text}</div>
+                </div>
+            `).join('');
+        }
+
+        // ========== 数据报告 ==========
+        function renderProfile() {
+            document.getElementById('statDays').textContent = appState.stats.totalDays;
+            document.getElementById('statLessons').textContent = appState.quizScores.length;
+            document.getElementById('statArticles').textContent = appState.readArticles.length;
+            
+            const scores = appState.quizScores.map(s => s.score);
+            const avg = scores.length ? Math.round(scores.reduce((a,b) => a+b, 0) / scores.length) : 0;
+            document.getElementById('statAvgScore').textContent = avg + '%';
+            
+            // 技能条
+            const skillData = [
+                { name: 'AI 认知', color: 'var(--secondary)', value: Math.min(appState.readArticles.length * 15, 100) },
+                { name: '产品思维', color: 'var(--primary)', value: Math.min(appState.quizScores.length * 20, 100) },
+                { name: '实战能力', color: 'var(--warning)', value: Math.min(appState.journals.length * 10, 100) }
+            ];
+            
+            document.getElementById('skillBars').innerHTML = skillData.map(s => `
+                <div class="skill-bar">
+                    <div class="skill-bar-label">
+                        <span>${s.name}</span>
+                        <span>${s.value}%</span>
+                    </div>
+                    <div class="skill-bar-track">
+                        <div class="skill-bar-fill" style="width: ${s.value}%; background: ${s.color}"></div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // 洞察
+            const insights = [];
+            if (appState.streak >= 3) insights.push('🔥 连续学习' + appState.streak + '天，保持得很好！');
+            if (avg >= 80) insights.push('📈 平均分' + avg + '分，知识掌握扎实');
+            if (appState.readArticles.length >= 4) insights.push('📚 本周文章已全部阅读');
+            if (insights.length === 0) insights.push('💡 开始阅读本周推文，完成测试打卡吧！');
+            
+            document.getElementById('insights').innerHTML = insights.map(i => `<p>· ${i}</p>`).join('');
+        }
+
+        // ========== 顶部状态 ==========
+        function updateTopStats() {
+            document.getElementById('streak').textContent = appState.streak;
+            document.getElementById('xp').textContent = appState.xp;
+        }
+
+        // ========== 设置选择器 ==========
+        document.querySelectorAll('.selector').forEach(sel => {
+            sel.querySelectorAll('.selector-opt').forEach(opt => {
+                opt.onclick = () => {
+                    sel.querySelectorAll('.selector-opt').forEach(o => o.classList.remove('active'));
+                    opt.classList.add('active');
+                };
+            });
+        });
+        
+        // ========== 深色模式 ==========
+        function toggleDarkMode() {
+            const toggle = document.getElementById('darkModeToggle');
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            
+            if (isDark) {
+                document.documentElement.removeAttribute('data-theme');
+                toggle.classList.remove('active');
+                localStorage.setItem('aipm_theme', 'light');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                toggle.classList.add('active');
+                localStorage.setItem('aipm_theme', 'dark');
+            }
+        }
+        
+        function initTheme() {
+            const saved = localStorage.getItem('aipm_theme');
+            if (saved === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.getElementById('darkModeToggle')?.classList.add('active');
+            }
+        }
+        
+        // ========== 重置进度 ==========
+        function resetProgress() {
+            if (confirm('⚠️ 确定要重置所有学习进度吗？\n\n此操作不可恢复！')) {
+                localStorage.removeItem('aipm_v2_state');
+                appState = loadState();
+                updateTopStats();
+                renderArticles();
+                alert('✅ 进度已重置，重新开始你的 AI PM 之旅吧！');
+                switchView('homeView');
+            }
+        }
+
+        // ========== 初始化 ==========
+        function init() {
+            initTheme();
+            renderArticles();
+            updateTopStats();
+        }
+
+        init();
+    </script>
+</body>
+</html>
