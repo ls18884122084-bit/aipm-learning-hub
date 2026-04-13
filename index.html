@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ⚠️ 禁止缓存此页面 - 内容每日更新 -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>AI PM 学习之旅</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -906,6 +910,9 @@
     </div>
 
     <script>
+        // ========== 全局版本号（每次推送时自动更新） ==========
+        const APP_VERSION = '2026.04.13.v3';
+        
         // ========== 数据 ==========
         let WEEKLY_ARTICLES = [];
         let CURRENT_WEEK_INFO = {};
@@ -950,7 +957,7 @@
                 try {
                     var url = candidates[ci];
                     console.log('[AI PM] Trying:', url);
-                    var response = await fetch(url + '?_t=' + Date.now());
+                    var response = await fetch(url + '?v=' + APP_VERSION + '&t=' + Date.now());
                     if (response.ok) {
                         data = await response.json();
                         loadedUrl = url;
@@ -1049,181 +1056,20 @@
             return count;
         }
         
-        // 默认内容（备用）
+        // ⚠️ 默认内容 - 仅作为最后的降级方案
+        // 注意：此函数不再包含旧的硬编码文章！
+        // 如果走到这里说明JSON加载完全失败
         function loadDefaultContent() {
-            WEEKLY_ARTICLES = [
-            {
-                id: 'w1a1',
-                title: '2026年，AI产品经理的下一个战场',
-                source: '人人都是产品经理',
-                date: '2026-03-16',
-                difficulty: 1,
-                tags: ['趋势', '入门'],
-                url: 'https://www.woshipm.com/ai/6353165.html',
-                summary: '分析2026年AI PM的核心机遇与技能要求',
-                content: `
-                    <h3>核心观点</h3>
-                    <p>2026年是大模型从"元年"到"常态"的关键转折。AI产品经理的核心竞争力已从"懂不懂AI"变成了"快不快"。</p>
-                    
-                    <div class="key-point">💡 关键洞察：这不是短期风口，而是持续20年的长期趋势</div>
-                    
-                    <h3>三大机会窗口</h3>
-                    <ul>
-                        <li><strong>垂直行业深度AI化</strong> — 医疗、法律、金融等领域需要复合型人才</li>
-                        <li><strong>多模态AI产品化</strong> — 文生视频、数字人、具身智能爆发</li>
-                        <li><strong>AI Agent自主化</strong> — 从辅助工具进化为自主智能体</li>
-                    </ul>
-                    
-                    <h3>必备技能</h3>
-                    <ul>
-                        <li><strong>Prompt工程</strong> — 任务说明、上下文、问题、输出格式四要素</li>
-                        <li><strong>RAG技术</strong> — 检索增强生成，解决大模型幻觉问题</li>
-                        <li><strong>Agent架构</strong> — LLM + 规划 + 记忆 + 工具</li>
-                    </ul>
-                    
-                    <div class="key-point">🎯 AI原生思维：不是"怎么改造旧产品"，而是"没有AI这个产品是否存在"</div>
-                `,
-                quiz: [
-                    { q: '2026年AI产品经理的核心竞争力是什么？', opts: ['懂不懂AI技术', '快不快（快速响应迭代）', '会不会写代码', '人脉广不广'], ans: 1, exp: '文章指出核心竞争力已从"懂不懂"变成"快不快"，强调快速响应和迭代能力。' },
-                    { q: '以下哪个不是2026年的三大机会窗口？', opts: ['垂直行业深度AI化', '多模态AI产品化', 'Web3与区块链', 'AI Agent自主化'], ans: 2, exp: '三大机会是垂直行业、多模态、AI Agent，Web3不在此列。' },
-                    { q: 'AI原生思维的核心是什么？', opts: ['用AI改造现有产品', '思考没有AI产品是否存在', '追求技术先进性', '尽量多用AI功能'], ans: 1, exp: 'AI原生思维要求从0思考，而非简单给旧产品"加AI"。' }
-                ]
-            },
-            {
-                id: 'w1a2',
-                title: '2026年AI与产品经理协作指南：效率翻倍的实战PM',
-                source: '人人都是产品经理',
-                date: '2026-03-16',
-                difficulty: 2,
-                tags: ['实战', '协作'],
-                url: 'https://www.woshipm.com/ai/6355612.html',
-                summary: '7大实战场景让AI成为你的效率杠杆',
-                content: `
-                    <h3>两种协作模式</h3>
-                    <ul>
-                        <li><strong>AI赋能型PM</strong> — 用AI省时间，聚焦高价值决策（适合大多数PM）</li>
-                        <li><strong>AI产品经理</strong> — 深耕技术做产品，做技术与商业的桥梁</li>
-                    </ul>
-                    
-                    <h3>7大高效场景</h3>
-                    <ul>
-                        <li>用户洞察：AI几分钟完成多源数据整合</li>
-                        <li>创意脑暴：AI生成Feature Ideas并多维度打分</li>
-                        <li>文档效率：AI起草初稿，节省80%时间</li>
-                        <li>快速原型：Prompt生成可点击MVP</li>
-                        <li>战略决策：AI扫描行业信号辅助判断</li>
-                        <li>数据闭环：AI自动监控异常并建议迭代</li>
-                        <li>人机协作：找到"AI初稿+人类精修"的最佳分界</li>
-                    </ul>
-                    
-                    <div class="key-point">⚡ 效率差异：深度协作的PM vs 只会复制Prompt的PM，生产力差距3-10倍</div>
-                    
-                    <h3>协作心法</h3>
-                    <ul>
-                        <li>把AI当"极度字面的初级队友"，给足上下文</li>
-                        <li>建立专属Prompt模板库，复用提效</li>
-                        <li>与AI辩论推演逻辑，补齐思维漏洞</li>
-                        <li>守住AI无法替代的核心：用户共情、跨部门博弈、伦理抉择</li>
-                    </ul>
-                `,
-                quiz: [
-                    { q: 'AI赋能型PM的核心逻辑是什么？', opts: ['用AI替代所有工作', '用AI省时间，聚焦高价值决策', '学会AI技术写代码', '让AI做所有决策'], ans: 1, exp: 'AI赋能型PM是用AI处理重复工作，自己聚焦决策和判断。' },
-                    { q: '"AI初稿+人类精修"模式的采纳率大约是多少？', opts: ['10-20%', '30-40%', '60-80%', '90-100%'], ans: 2, exp: '文章指出全AI生成采纳率仅10-20%，而AI初稿+人类精修可达60-80%。' },
-                    { q: '以下哪项是PM必须守住的不可替代价值？', opts: ['写PRD文档', '画原型图', '深层用户共情与伦理抉择', '数据统计分析'], ans: 2, exp: '用户共情、跨部门博弈、伦理抉择是AI难以替代的核心能力。' },
-                    { q: '会深度协作的PM与只会复制Prompt的PM，生产力差距是多少？', opts: ['相差不大', '2倍', '3-10倍', '100倍'], ans: 2, exp: '文章明确指出生产力差距可达3-10倍。' }
-                ]
-            },
-            {
-                id: 'w1a3',
-                title: 'AI产品经理的"生死线"：当大模型成为标配',
-                source: '人人都是产品经理',
-                date: '2026-03-11',
-                difficulty: 2,
-                tags: ['竞争力', '进阶'],
-                url: 'https://www.woshipm.com/ai/6351497.html',
-                summary: '新护城河：场景洞察力、成本把控力、评估体系',
-                content: `
-                    <h3>行业现状</h3>
-                    <ul>
-                        <li>AI产品经理岗位数量同比下滑42%</li>
-                        <li>淘汰"伪AI PM"（仅会调API），高薪抢夺资深专家</li>
-                        <li>67%企业反馈AI功能使用率低于预期</li>
-                    </ul>
-                    
-                    <div class="key-point">🔄 认知转变：从"AI+产品"转向"产品+AI"——业务需要什么，看AI是否为最优解</div>
-                    
-                    <h3>新的三层能力模型</h3>
-                    <ul>
-                        <li><strong>场景洞察力</strong> — 比用户更懂真实需求，不只是懂技术</li>
-                        <li><strong>成本把控力</strong> — 模型分层（降本40-60%）、缓存策略、预计算</li>
-                        <li><strong>评估体系</strong> — 准确性>85%、P95延迟<2秒、使用率>30%</li>
-                    </ul>
-                    
-                    <h3>需求验证三问法</h3>
-                    <ul>
-                        <li>这个问题不用AI能解决吗？</li>
-                        <li>用AI比传统方案好多少？（<30%慎重，>50%值得）</li>
-                        <li>这个优势能持续多久？</li>
-                    </ul>
-                    
-                    <h3>2026三个机会点</h3>
-                    <ul>
-                        <li>垂直行业的"AI原生工作流"</li>
-                        <li>AI产品的"可解释性"建立信任</li>
-                        <li>人机协作的"边界设计"</li>
-                    </ul>
-                `,
-                quiz: [
-                    { q: '2026年Q1，AI产品经理岗位数量变化是？', opts: ['增长42%', '持平', '下滑42%', '下滑10%'], ans: 2, exp: '文章数据显示岗位数量同比下滑42%。' },
-                    { q: '以下哪个是新的核心竞争力？', opts: ['会调用更多API', '场景洞察力和成本把控力', '掌握更多模型参数', '写更复杂的Prompt'], ans: 1, exp: '新护城河是场景洞察力、成本把控力、评估体系，而非单纯技术能力。' },
-                    { q: '模型分层策略可以降低多少成本？', opts: ['10-20%', '20-30%', '40-60%', '80-90%'], ans: 2, exp: '简单任务用小模型，复杂用大模型，可降本40-60%。' },
-                    { q: '用AI解决问题比传统方案提升多少才值得投入？', opts: ['任何提升都值得', '>30%', '>50%', '>100%'], ans: 2, exp: '文章建议提升<30%要慎重，>50%值得投入。' }
-                ]
-            },
-            {
-                id: 'w1a4',
-                title: 'AI Product Management Trends Reshaping 2026',
-                source: 'LinkedIn / Boston Institute',
-                date: '2026-03-13',
-                difficulty: 3,
-                tags: ['国际', '趋势', '英文'],
-                url: 'https://bostoninstituteofanalytics.org/blog/agentic-ai-news-roundup-7-13-march-2026-market-growth-enterprise-adoption-new-ai-agents/',
-                summary: 'Agentic AI市场增长与企业采用趋势',
-                content: `
-                    <h3>Global Trends</h3>
-                    <ul>
-                        <li><strong>Agentic AI Market Growth</strong> — 企业级Agent采用率快速增长</li>
-                        <li><strong>73% of PMs use AI weekly</strong> — AI工具已成为PM标配</li>
-                        <li><strong>From experimentation to core operations</strong> — AI从实验期进入核心业务</li>
-                    </ul>
-                    
-                    <div class="key-point">🌍 国际视角：2026年AI从"增长模式"转向"变现策略"</div>
-                    
-                    <h3>Key Developments</h3>
-                    <ul>
-                        <li>RAG和Agentic AI成为产品设计标配</li>
-                        <li>多模态能力（文本、图像、视频）融合</li>
-                        <li>AI治理与合规成为必修课</li>
-                        <li>边缘推理技术降低延迟和成本</li>
-                    </ul>
-                    
-                    <h3>PM角色转变</h3>
-                    <ul>
-                        <li>从功能设计者到AI系统架构师</li>
-                        <li>从需求文档到Agent编排设计</li>
-                        <li>从用户调研到数据飞轮设计</li>
-                    </ul>
-                `,
-                quiz: [
-                    { q: '根据2026年数据，多少比例的PM每周使用AI工具？', opts: ['23%', '53%', '73%', '93%'], ans: 2, exp: '数据显示73%的PM现在每周使用AI工具。' },
-                    { q: '2026年AI产品的主要转变方向是？', opts: ['从变现到实验', '从实验到核心业务运营', '从核心业务到边缘测试', '从企业到个人'], ans: 1, exp: 'AI正从实验期进入核心业务运营阶段。' }
-                ]
-            }
-            ];
+            console.error('[AI PM] ⚠️ All content loading failed! Showing error state.');
+            
+            // 清空旧数据（关键：防止显示过时内容）
+            WEEKLY_ARTICLES = [];
             CURRENT_WEEK_INFO = {
-                weekId: '2026-03-16',
-                weekLabel: '3月第3周',
-                theme: 'AI PM 学习之旅'
+                weekId: 'ERROR',
+                weekLabel: '加载失败',
+                theme: '请刷新页面',
+                totalQuestions: 0,
+                passScore: 80
             };
         }
 
