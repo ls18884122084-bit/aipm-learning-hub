@@ -723,15 +723,15 @@
             <!-- 本周精选推文 -->
             <div class="content-section">
                 <div class="section-header">
-                    <span class="section-title">📰 本周推文 <span class="section-badge">3月第3周</span></span>
+                    <span class="section-title">📰 本周推文 <span class="section-badge" id="weekLabelBadge">加载中...</span></span>
                     <span id="readProgress" style="font-size: 12px; color: var(--text-light);"></span>
                 </div>
                 <div id="articleList"></div>
             </div>
 
             <!-- 开始测试按钮 -->
-            <button class="btn btn-primary" onclick="startWeeklyQuiz()" style="margin-top: 12px;">
-                📝 开始本周测试（15题）
+            <button class="btn btn-primary" onclick="startWeeklyQuiz()" style="margin-top: 12px;" id="quizStartBtn">
+                📝 开始本周测试（加载中...）
             </button>
             <p style="text-align: center; font-size: 12px; color: var(--text-light); margin-top: 8px;">
                 建议阅读推文后再测试，80分合格
@@ -910,62 +910,85 @@
         let WEEKLY_ARTICLES = [];
         let CURRENT_WEEK_INFO = {};
         
-        // 从JSON文件加载最新内容
+        // 从JSON文件加载最新内容（动态检测最新周次）
         async function loadWeeklyContent() {
-            try {
-                // 尝试加载最新的4月9日内容
-                const response = await fetch('content/week-2026-04-09.json?t=' + Date.now());
-                if (!response.ok) throw new Error('Failed to load');
-                
-                const data = await response.json();
-                CURRENT_WEEK_INFO = {
-                    weekId: data.weekId,
-                    weekLabel: data.weekLabel,
-                    theme: data.theme,
-                    totalQuestions: data.totalQuestions,
-                    passScore: data.passScore
-                };
-                
-                // 转换JSON格式为页面需要的格式
-                WEEKLY_ARTICLES = data.articles.map(article => ({
-                    id: article.id,
-                    title: article.title,
-                    source: article.source,
-                    date: article.date,
-                    difficulty: article.difficulty,
-                    tags: article.tags,
-                    url: article.sourceUrl,
-                    summary: article.summary,
-                    content: `
-                        <h3>核心要点</h3>
-                        <ul>
-                            ${article.keyPoints.map(kp => `<li>${kp}</li>`).join('')}
-                        </ul>
-                        <h3>文章摘要</h3>
-                        <p>${article.summary}</p>
-                    `,
-                    quiz: article.quiz.map(q => ({
-                        q: q.question,
-                        opts: q.options,
-                        ans: q.answer,
-                        exp: q.explanation
-                    }))
-                }));
-                
-                // 更新页面主题
-                document.getElementById('currentWeekTheme').textContent = data.theme;
-                document.getElementById('weekLabel').textContent = data.weekLabel;
-                
-                // 重新渲染页面
-                renderArticles();
-                updateStats();
-                
-                console.log('Loaded weekly content:', data.weekLabel);
-            } catch (error) {
-                console.error('Failed to load weekly content:', error);
-                // 如果加载失败，使用默认内容
-                loadDefaultContent();
+            // 按时间倒序列出可能的周次文件，逐一尝试
+            const today = new Date();
+            const candidates = [];
+            
+            // 生成最近8周的候选文件名
+            for (let i = 0; i < 8; i++) {
+                const d = new Date(today);
+                d.setDate(d.getDate() - i * 7); // 每周回退
+                const yyyy = d.getFullYear();
+                const mm = String(d.getMonth() + 1).padStart(2, '0');
+                const dd = String(d.getDate()).padStart(2, '0');
+                candidates.push(`content/week-${yyyy}-${mm}-${dd}.json`);
             }
+            
+            let data = null;
+            for (const url of candidates) {
+                try {
+                    const response = await fetch(url + '?t=' + Date.now());
+                    if (response.ok) {
+                        data = await response.json();
+                        console.log('Loaded weekly content from:', url);
+                        break;
+                    }
+                } catch (e) {
+                    // 继续尝试下一个
+                }
+            }
+            
+            if (!data) {
+                console.error('Failed to load any weekly content file');
+                loadDefaultContent();
+                return;
+            }
+            
+            CURRENT_WEEK_INFO = {
+                weekId: data.weekId,
+                weekLabel: data.weekLabel,
+                theme: data.theme,
+                totalQuestions: data.totalQuestions,
+                passScore: data.passScore
+            };
+            
+            // 转换JSON格式为页面需要的格式
+            WEEKLY_ARTICLES = data.articles.map(article => ({
+                id: article.id,
+                title: article.title,
+                source: article.source,
+                date: article.date,
+                difficulty: article.difficulty,
+                tags: article.tags,
+                url: article.sourceUrl,
+                summary: article.summary,
+                content: `
+                    <h3>核心要点</h3>
+                    <ul>
+                        ${article.keyPoints.map(kp => `<li>${kp}</li>`).join('')}
+                    </ul>
+                    <h3>文章摘要</h3>
+                    <p>${article.summary}</p>
+                `,
+                quiz: (article.questions || []).map(q => ({
+                    q: q.question,
+                    opts: q.options,
+                    ans: q.answer,
+                    exp: q.explanation
+                }))
+            }));
+            
+            // 更新页面主题（动态）
+            document.getElementById('weekLabelBadge').textContent = data.weekLabel || '';
+            document.getElementById('quizStartBtn').innerHTML = '📝 开始本周测试（' + (data.totalQuestions || 14) + '题）';
+            
+            // 重新渲染页面
+            renderArticles();
+            updateStats();
+            
+            console.log('Loaded weekly content:', data.weekLabel);
         }
         
         // 默认内容（备用）
@@ -1169,8 +1192,7 @@
             // 按难度排序：简单 → 中等 → 困难
             allQuestions.sort((a, b) => a.difficulty - b.difficulty);
             
-            // 取前15题
-            return allQuestions.slice(0, 15);
+            return allQuestions;
         }
 
         // 学习路径数据
