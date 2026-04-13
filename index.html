@@ -10,7 +10,7 @@
     <script>
         /* 版本检测：强制绕过所有浏览器缓存 */
         (function() {
-            var CV = '2026.04.13.v5';
+            var CV = '2026.04.13.v6';
             var saved = localStorage.getItem('aipm_cache_version');
             if (saved !== CV) {
                 localStorage.setItem('aipm_cache_version', CV);
@@ -922,7 +922,7 @@
 
     <script>
         // ========== 全局版本号（每次推送时自动更新） ==========
-        const APP_VERSION = '2026.04.13.v5';
+        const APP_VERSION = '2026.04.13.v6';
         
         // ========== 数据 ==========
         let WEEKLY_ARTICLES = [];
@@ -1178,7 +1178,7 @@
         function renderArticles() {
             const list = document.getElementById('articleList');
             const readCount = appState.readArticles.filter(id => 
-                WEEKLY_ARTICLES.some(a => a.id === id)
+                WEEKLY_ARTICLES.some(a => a.id == id)
             ).length;
             
             // 更新阅读进度
@@ -1189,7 +1189,7 @@
             }
             
             list.innerHTML = WEEKLY_ARTICLES.map(a => {
-                const isRead = appState.readArticles.includes(a.id);
+                const isRead = appState.readArticles.some(rid => rid == a.id);
                 return `
                     <div class="article-card ${isRead ? 'read' : ''}" onclick="openArticle('${a.id}')">
                         <div class="article-title">${a.title}</div>
@@ -1203,8 +1203,9 @@
         }
 
         function openArticle(id) {
-            currentArticle = WEEKLY_ARTICLES.find(a => a.id === id);
-            if (!currentArticle) return;
+            // == 宽松比较：兼容数字id和字符串id（JSON中id可能是数字1，onclick传入的是字符串'1'）
+            currentArticle = WEEKLY_ARTICLES.find(a => a.id == id);
+            if (!currentArticle) { console.error('[AI PM] Article not found for id:', id, typeof id); return; }
             
             document.getElementById('articleReader').innerHTML = `
                 <div class="article-reader-title">${currentArticle.title}</div>
@@ -1225,7 +1226,7 @@
         }
 
         function markArticleRead() {
-            if (currentArticle && !appState.readArticles.includes(currentArticle.id)) {
+            if (currentArticle && !appState.readArticles.some(rid => rid == currentArticle.id)) {
                 appState.readArticles.push(currentArticle.id);
                 appState.xp += 5;
                 saveState();
