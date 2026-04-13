@@ -912,33 +912,44 @@
         
         // 从JSON文件加载最新内容（动态检测最新周次）
         async function loadWeeklyContent() {
-            // 按时间倒序列出可能的周次文件，逐一尝试
             const today = new Date();
             const candidates = [];
             
-            // 生成最近8周的候选文件名
-            for (let i = 0; i < 8; i++) {
+            // 策略1：先尝试今天和昨天（覆盖周一凌晨生成、当天访问场景）
+            for (let i = 0; i <= 1; i++) {
                 const d = new Date(today);
-                d.setDate(d.getDate() - i * 7); // 每周回退
-                const yyyy = d.getFullYear();
-                const mm = String(d.getMonth() + 1).padStart(2, '0');
-                const dd = String(d.getDate()).padStart(2, '0');
-                candidates.push(`content/week-${yyyy}-${mm}-${dd}.json`);
+                d.setDate(d.getDate() - i);
+                candidates.push(formatWeekFilename(d));
+            }
+            
+            // 策略2：再回溯最近12周（每周一为基准）
+            const mondayOffset = today.getDay() === 1 ? 0 : (today.getDay() === 0 ? 6 : today.getDay() - 1); // 距离最近周一的天数
+            for (let i = 0; i < 12; i++) {
+                const d = new Date(today);
+                d.setDate(d.getDate() - mondayOffset - i * 7);
+                const fname = formatWeekFilename(d);
+                if (!candidates.includes(fname)) candidates.push(fname);
             }
             
             let data = null;
             for (const url of candidates) {
                 try {
-                    const response = await fetch(url + '?t=' + Date.now());
+                    const response = await fetch(url + '?_t=' + Date.now());
                     if (response.ok) {
                         data = await response.json();
-                        console.log('Loaded weekly content from:', url);
+                        console.log('[AI PM] Loaded content from:', url, '| weekId:', data.weekId);
                         break;
                     }
-                } catch (e) {
-                    // 继续尝试下一个
-                }
+                } catch (e) { /* continue */ }
             }
+
+        // 辅助函数：生成周次文件名
+        function formatWeekFilename(date) {
+            const yyyy = date.getFullYear();
+            const mm = String(date.getMonth() + 1).padStart(2, '0');
+            const dd = String(date.getDate()).padStart(2, '0');
+            return `content/week-${yyyy}-${mm}-${dd}.json`;
+        }
             
             if (!data) {
                 console.error('Failed to load any weekly content file');
