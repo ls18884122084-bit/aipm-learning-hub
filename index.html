@@ -907,7 +907,70 @@
 
     <script>
         // ========== 数据 ==========
-        const WEEKLY_ARTICLES = [
+        let WEEKLY_ARTICLES = [];
+        let CURRENT_WEEK_INFO = {};
+        
+        // 从JSON文件加载最新内容
+        async function loadWeeklyContent() {
+            try {
+                // 尝试加载最新的4月9日内容
+                const response = await fetch('content/week-2026-04-09.json?t=' + Date.now());
+                if (!response.ok) throw new Error('Failed to load');
+                
+                const data = await response.json();
+                CURRENT_WEEK_INFO = {
+                    weekId: data.weekId,
+                    weekLabel: data.weekLabel,
+                    theme: data.theme,
+                    totalQuestions: data.totalQuestions,
+                    passScore: data.passScore
+                };
+                
+                // 转换JSON格式为页面需要的格式
+                WEEKLY_ARTICLES = data.articles.map(article => ({
+                    id: article.id,
+                    title: article.title,
+                    source: article.source,
+                    date: article.date,
+                    difficulty: article.difficulty,
+                    tags: article.tags,
+                    url: article.sourceUrl,
+                    summary: article.summary,
+                    content: `
+                        <h3>核心要点</h3>
+                        <ul>
+                            ${article.keyPoints.map(kp => `<li>${kp}</li>`).join('')}
+                        </ul>
+                        <h3>文章摘要</h3>
+                        <p>${article.summary}</p>
+                    `,
+                    quiz: article.quiz.map(q => ({
+                        q: q.question,
+                        opts: q.options,
+                        ans: q.answer,
+                        exp: q.explanation
+                    }))
+                }));
+                
+                // 更新页面主题
+                document.getElementById('currentWeekTheme').textContent = data.theme;
+                document.getElementById('weekLabel').textContent = data.weekLabel;
+                
+                // 重新渲染页面
+                renderArticles();
+                updateStats();
+                
+                console.log('Loaded weekly content:', data.weekLabel);
+            } catch (error) {
+                console.error('Failed to load weekly content:', error);
+                // 如果加载失败，使用默认内容
+                loadDefaultContent();
+            }
+        }
+        
+        // 默认内容（备用）
+        function loadDefaultContent() {
+            WEEKLY_ARTICLES = [
             {
                 id: 'w1a1',
                 title: '2026年，AI产品经理的下一个战场',
@@ -1075,7 +1138,18 @@
                     { q: '2026年AI产品的主要转变方向是？', opts: ['从变现到实验', '从实验到核心业务运营', '从核心业务到边缘测试', '从企业到个人'], ans: 1, exp: 'AI正从实验期进入核心业务运营阶段。' }
                 ]
             }
-        ];
+            ];
+            CURRENT_WEEK_INFO = {
+                weekId: '2026-03-16',
+                weekLabel: '3月第3周',
+                theme: 'AI PM 学习之旅'
+            };
+        }
+        
+        // 页面加载时自动加载最新内容
+        document.addEventListener('DOMContentLoaded', function() {
+            loadWeeklyContent();
+        });
 
         // 根据文章生成完整的15题测试（按难度渐进）
         function generateWeeklyQuiz() {
