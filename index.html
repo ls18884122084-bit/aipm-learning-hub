@@ -7,6 +7,17 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
+    <script>
+        /* 版本检测：强制绕过所有浏览器缓存 */
+        (function() {
+            var CV = '2026.04.13.v4';
+            var saved = localStorage.getItem('aipm_cache_version');
+            if (saved !== CV) {
+                localStorage.setItem('aipm_cache_version', CV);
+                if (saved) location.reload(true);
+            }
+        })();
+    </script>
     <title>AI PM 学习之旅</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -911,7 +922,7 @@
 
     <script>
         // ========== 全局版本号（每次推送时自动更新） ==========
-        const APP_VERSION = '2026.04.13.v3';
+        const APP_VERSION = '2026.04.13.v4';
         
         // ========== 数据 ==========
         let WEEKLY_ARTICLES = [];
