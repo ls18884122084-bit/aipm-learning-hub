@@ -1,0 +1,277 @@
+{
+  "weekId": "2026-04-15",
+  "weekLabel": "4月第3周",
+  "generatedAt": "2026-04-15T09:00:00+08:00",
+  "theme": "AI Agent工程化三层架构：从Prompt到Harness的系统设计演进",
+  "articles": [
+    {
+      "id": "w7a1",
+      "title": "RAG检索增强生成：给AI配一个实时可查的外部大脑",
+      "source": "腾讯云开发者社区",
+      "author": "巫山老妖",
+      "date": "2026-04-13",
+      "difficulty": 1,
+      "tags": ["RAG", "知识库", "入门必读"],
+      "sourceUrl": "https://cloud.tencent.com/developer/article/2653956",
+      "summary": "用开卷考试vs闭卷考试的比喻，解释RAG如何让AI从'靠记忆回答'变成'实时检索后回答'，解决知识时效性、私有数据安全、AI幻觉三大痛点。",
+      "keyPoints": [
+        "RAG本质：普通LLM是闭卷考试靠记忆，RAG是开卷考试实时检索",
+        "两阶段工作流：离线建库（文档→切片→向量化→向量库）+ 在线查询（提问→检索→召回→生成）",
+        "解决四大问题：知识时效性、私有数据安全、减少AI幻觉、来源可追溯",
+        "行业应用：企业知识库、医疗文献辅助、法律咨询、智能客服"
+      ],
+      "quiz": [
+        {
+          "question": "RAG（检索增强生成）与普通LLM的核心区别是什么？",
+          "options": [
+            "RAG使用更大的模型参数",
+            "RAG在生成答案前会先检索外部知识库",
+            "RAG只能处理中文问题",
+            "RAG不需要GPU运行"
+          ],
+          "answer": 1,
+          "explanation": "RAG的核心是在生成前先检索外部知识库获取相关信息，相当于让AI从'闭卷考试'变成'开卷考试'，而不是简单增大模型参数。"
+        },
+        {
+          "question": "RAG的离线建库阶段，正确的处理顺序是？",
+          "options": [
+            "向量化 → 切片 → 存储 → 文档导入",
+            "文档导入 → 向量化 → 切片 → 存储",
+            "文档导入 → 切片 → 向量化 → 存储到向量库",
+            "切片 → 文档导入 → 存储 → 向量化"
+          ],
+          "answer": 2,
+          "explanation": "RAG建库的标准流程是：先导入原始文档，然后切分成小片段（便于检索），再将片段向量化（转为数学表示），最后存储到向量数据库。"
+        },
+        {
+          "question": "以下哪个场景最适合使用RAG技术？",
+          "options": [
+            "让AI学会写古诗的特定风格",
+            "企业内部员工查询公司最新规章制度",
+            "训练AI识别猫狗图片",
+            "让AI掌握某种编程语言的语法"
+          ],
+          "answer": 1,
+          "explanation": "RAG最适合需要实时获取最新/私有知识的场景。企业规章制度会频繁更新且是私有数据，非常适合RAG。写诗风格属于风格对齐，更适合微调。"
+        }
+      ]
+    },
+    {
+      "id": "w7a2",
+      "title": "大模型微调完全指南：LoRA、QLoRA、全量微调怎么选？",
+      "source": "SegmentFault 思否",
+      "author": "七牛云行业应用",
+      "date": "2026-03-09",
+      "difficulty": 1,
+      "tags": ["LoRA", "QLoRA", "微调", "入门指南"],
+      "sourceUrl": "https://segmentfault.com/a/1190000047641645",
+      "summary": "系统对比全量微调、LoRA、QLoRA三种主流微调方法的原理、显存需求和适用场景，提供清晰的技术选型决策框架。",
+      "keyPoints": [
+        "微调解决三类问题：知识注入（私有知识库）、风格对齐（输出语气格式）、任务专精（特定任务提升）",
+        "LoRA原理：通过低秩矩阵分解，仅增加约3.6%参数即可达到接近全量微调效果",
+        "QLoRA额外价值：引入4-bit量化，65B模型微调显存从780GB压缩至48GB",
+        "选型决策：显存≥80GB选全量/LoRA，24-40GB选QLoRA，<24GB选QLoRA+梯度累积",
+        "微调vs RAG：知识频繁更新选RAG，风格对齐选微调，两者结合可获最优效果"
+      ],
+      "quiz": [
+        {
+          "question": "LoRA微调技术的核心原理是什么？",
+          "options": [
+            "冻结所有参数，只训练最后一层",
+            "通过低秩矩阵分解，在原始权重旁插入可训练的小矩阵",
+            "将模型压缩成更小的版本后再训练",
+            "使用强化学习从人类反馈中学习"
+          ],
+          "answer": 1,
+          "explanation": "LoRA的核心是低秩分解：冻结原始权重W，在旁边插入两个小矩阵A和B（W' = W + AB），只训练A和B。这样只需增加约1-3%的参数就能获得接近全量微调的效果。"
+        },
+        {
+          "question": "你有一块24GB显存的消费级显卡，想微调一个7B参数的模型，应该选择哪种方法？",
+          "options": [
+            "全量微调",
+            "LoRA",
+            "QLoRA",
+            "P-Tuning"
+          ],
+          "answer": 2,
+          "explanation": "7B模型全量微调需要≥80GB显存，LoRA需要约16GB，而QLoRA通过4-bit量化只需约10-12GB。24GB显卡最适合QLoRA，既能装下模型又有余量。"
+        },
+        {
+          "question": "以下哪种场景更适合使用微调而非RAG？",
+          "options": [
+            "让客服AI能查询公司最新产品价格",
+            "让AI输出符合公司品牌调性的回复风格",
+            "让AI能回答基于最新法规的法律问题",
+            "让AI能查询实时库存信息"
+          ],
+          "answer": 1,
+          "explanation": "RAG适合动态知识查询（价格、库存、法规会变），微调适合让模型学会特定风格或行为模式。让AI统一输出品牌调性属于风格对齐，适合微调。"
+        }
+      ]
+    },
+    {
+      "id": "w7a3",
+      "title": "Prompt、Context、Harness：AI Agent工程的三层架构解析",
+      "source": "腾讯云开发者社区",
+      "author": "deephub",
+      "date": "2026-04-15",
+      "difficulty": 2,
+      "tags": ["Agent架构", "Harness", "Context Engineering", "系统设计"],
+      "sourceUrl": "https://cloud.tencent.com/developer/article/2655114",
+      "summary": "深度解析AI Agent工程从Prompt Engineering到Context Engineering再到Harness Engineering的演进，揭示三层架构如何协作构建可靠的Agent系统。",
+      "keyPoints": [
+        "三层演进：2023 Prompt Engineering → 2025 Context Engineering → 2026 Harness Engineering",
+        "Prompt层：解决'怎么表达任务'，技术包括思维链、角色设定、结构化输出",
+        "Context层三组件：RAG（知识检索）、Tools（工具调用）、Memory（短期对话+长期结构化）",
+        "Harness层核心：设计约束Agent行为、验证是否正确完成、出错时纠正的系统",
+        "实证数据：LangChain仅改Harness（不换模型），Terminal Bench得分从52.8%升至66.5%",
+        "故障诊断：输出格式错→Prompt层，杜撰事实→Context层，长任务漂移/静默失败→Harness层"
+      ],
+      "quiz": [
+        {
+          "question": "根据文章的三层架构，如果Agent在长任务中逐渐'跑偏'忘记原始目标，问题最可能出在哪一层？",
+          "options": [
+            "Prompt层 - 任务表达不够清晰",
+            "Context层 - RAG检索结果不准确",
+            "Harness层 - 缺乏有效的任务进度监控和纠偏机制",
+            "模型层 - 底座模型能力不足"
+          ],
+          "answer": 2,
+          "explanation": "长任务漂移（drift）是典型的Harness层问题。Harness负责监控Agent行为、验证任务进度、在偏离时纠正。缺乏有效的Harness设计会导致Agent在多轮执行中逐渐忘记目标。"
+        },
+        {
+          "question": "Context Engineering的三个核心组件是什么？",
+          "options": [
+            "输入、处理、输出",
+            "RAG检索、工具调用、记忆系统",
+            "编码器、解码器、注意力",
+            "训练、验证、推理"
+          ],
+          "answer": 1,
+          "explanation": "Context Engineering关注'模型决策时看到什么'，三个核心组件是：RAG（处理知识超出上下文窗口）、Tools（让模型与现实世界交互）、Memory（解决模型无状态性）。"
+        },
+        {
+          "question": "文章提到的AGENTS.md配置文件，推荐的最佳实践是什么？",
+          "options": [
+            "尽可能详细，包含完整目录结构和所有规则",
+            "不超过60行，不列目录结构，只包含关键指导原则",
+            "只写一句话概述Agent用途即可",
+            "每次任务都重新生成不同的配置"
+          ],
+          "answer": 1,
+          "explanation": "文章明确建议AGENTS.md不超过60行，不列目录结构。过长的系统提示会稀释关键信息，让模型难以抓住重点。精简的配置让Agent更聚焦。"
+        }
+      ]
+    },
+    {
+      "id": "w7a4",
+      "title": "AI Agent记忆管理实战：上下文窗口、RAG与会话持久化",
+      "source": "HTMLPAGE",
+      "author": "HTMLPAGE团队",
+      "date": "2026-03-02",
+      "difficulty": 2,
+      "tags": ["记忆系统", "上下文管理", "工程化", "多轮对话"],
+      "sourceUrl": "https://htmlpage.cn/topics/ai/ai-agent-memory-management-practice",
+      "summary": "从工程视角拆解AI Agent的三层记忆架构（短期/长期/外部），给出上下文窗口预算分配策略和记忆管线设计的完整落地方案。",
+      "keyPoints": [
+        "记忆设计两大极端陷阱：全拼进prompt导致窗口爆掉 vs 只保留最近几轮导致反复追问",
+        "三层记忆架构：短期（最近对话原文）、长期（用户偏好/身份/目标）、外部（RAG/工具结果）",
+        "推荐预算分配：30%短期原文 + 20%摘要状态 + 40%外部证据 + 10%系统协议",
+        "工作记忆拆分：摘要层（可读短段落）+ 状态层（可校验JSON字段）",
+        "关键评估指标：重复追问率、约束违反率、长对话成功率、引用率、平均token成本"
+      ],
+      "quiz": [
+        {
+          "question": "文章推荐的上下文窗口预算分配中，占比最大的应该是哪部分？",
+          "options": [
+            "系统协议（角色、输出结构）",
+            "短期原文（最近对话）",
+            "外部证据（RAG/工具结果）",
+            "摘要和结构化状态"
+          ],
+          "answer": 2,
+          "explanation": "文章推荐的预算分配是：40%外部证据 > 30%短期原文 > 20%摘要状态 > 10%系统协议。外部证据占比最大，因为Agent决策往往需要大量来自知识库和工具的支撑信息。"
+        },
+        {
+          "question": "文章提到的'工作记忆拆分为两层'指的是什么？",
+          "options": [
+            "CPU缓存和内存",
+            "向量存储和关系数据库",
+            "摘要层（可读段落）和状态层（可校验JSON字段）",
+            "短期记忆和长期记忆"
+          ],
+          "answer": 2,
+          "explanation": "工作记忆拆分为摘要层和状态层：摘要层保留语境和任务进展（自然语言），状态层保留结构化约束（JSON字段）。这样摘要压缩时不会丢失关键约束。"
+        },
+        {
+          "question": "以下哪个指标最能反映Agent的记忆系统是否有效？",
+          "options": [
+            "模型的参数规模",
+            "repeat_question_rate（重复追问率）",
+            "推理速度（tokens/秒）",
+            "模型的训练数据量"
+          ],
+          "answer": 1,
+          "explanation": "重复追问率（repeat_question_rate）直接反映记忆系统效果：如果Agent频繁追问已经告知的信息，说明记忆管理失败。这是文章列出的核心评估指标之一。"
+        }
+      ]
+    },
+    {
+      "id": "w7a5",
+      "title": "AI Customer Service: How It Works & Best Tools (2026)",
+      "source": "Alhena AI",
+      "author": "Ashu Dubey & Surya Krishnan",
+      "date": "2026-03-16",
+      "difficulty": 3,
+      "tags": ["AI客服", "行业实践", "英文原文", "产品设计"],
+      "sourceUrl": "https://alhena.ai/blog/ai-customer-service-guide/",
+      "summary": "LinkedIn前产品增长负责人深度解析AI客服从规则机器人到代理式AI的三代演进，并给出完整的30项评估清单和落地路线图。",
+      "keyPoints": [
+        "AI客服三代演进：规则聊天机器人 → 生成式AI代理 → 代理式AI（不仅回答还能执行操作）",
+        "当前阶段核心能力：填充购物车、处理退货、应用折扣码、完成购买，将客服转化为销售渠道",
+        "技术原理五步：意图识别 → 信息检索 → 生成回复 → 执行操作 → 智能升级（转人工）",
+        "实际案例：Tatcha通过AI对话驱动11.4%网站总收入，订单价值提升38%",
+        "评估30项清单五大类：实施集成(11项)、客户体验(9项)、反馈监督(5项)、维护(3项)、运营就绪(6项)",
+        "关键指标：幻觉率是客户体验类中最关键的评估指标"
+      ],
+      "quiz": [
+        {
+          "question": "根据文章，2026年代理式AI客服与传统聊天机器人的最大区别是什么？",
+          "options": [
+            "使用更大的语言模型",
+            "支持更多语言",
+            "不仅能回答问题，还能直接执行业务操作（如处理退货、下单）",
+            "响应速度更快"
+          ],
+          "answer": 2,
+          "explanation": "代理式AI（Agentic AI）的核心突破是从'只回答问题'进化到'能执行真实业务流程'：处理退货、添加折扣码、完成购买。这让AI客服从成本中心变成收入来源。"
+        },
+        {
+          "question": "文章提到Tatcha品牌使用AI客服后的效果数据是什么？",
+          "options": [
+            "客服成本降低50%",
+            "响应时间缩短到1秒",
+            "AI对话驱动11.4%的网站总收入，订单价值提升38%",
+            "客户满意度提升到99%"
+          ],
+          "answer": 2,
+          "explanation": "Tatcha是文章中的典型成功案例：通过AI对话驱动了11.4%的网站总收入，平均订单价值提升38%。这证明AI客服不仅能降本，更能直接创收。"
+        },
+        {
+          "question": "在文章的30项AI客服评估清单中，'客户体验'类别里最关键的指标是什么？",
+          "options": [
+            "响应速度",
+            "支持的语言数量",
+            "幻觉率（hallucination rate）",
+            "UI美观程度"
+          ],
+          "answer": 2,
+          "explanation": "文章明确指出幻觉率是客户体验类中最关键的指标。AI客服如果编造不存在的产品信息或错误的政策，会直接损害客户信任和品牌声誉。"
+        }
+      ]
+    }
+  ],
+  "totalQuestions": 14,
+  "passScore": 80,
+  "nextUpdateDate": "2026-04-16"
+}
