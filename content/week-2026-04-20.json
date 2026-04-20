@@ -1,0 +1,271 @@
+{
+  "weekId": "2026-04-20",
+  "weekLabel": "4月第3周",
+  "generatedAt": "2026-04-20T12:14:00+08:00",
+  "theme": "Multi-Agent时代：从单智能体到多智能体协作的架构跃迁",
+  "articles": [
+    {
+      "id": "w8a1",
+      "title": "Transformer架构通俗解读：为什么它是大模型的基石",
+      "author": "腾讯云开发者社区",
+      "source": "腾讯云",
+      "date": "2026-04-14",
+      "difficulty": 1,
+      "tags": ["Transformer", "入门", "架构原理"],
+      "sourceUrl": "https://cloud.tencent.com/developer/article/2654871",
+      "summary": "用生活类比解读Transformer核心概念：自注意力机制像开会时每个人都能听到其他人发言并决定关注谁，位置编码像给单词加上座位号。",
+      "keyPoints": [
+        "Transformer基于自注意力机制实现并行计算，突破RNN的序列依赖限制",
+        "核心组件三件套：多头注意力（并行关注多维度）、位置编码（记住单词顺序）、前馈网络（深度特征提取）",
+        "编码器负责理解输入，解码器负责生成输出，GPT只用解码器，BERT只用编码器",
+        "自注意力公式：Attention(Q,K,V) = softmax(QK^T/√d_k)V，√d_k是缩放因子防止梯度消失"
+      ],
+      "quiz": [
+        {
+          "question": "Transformer相比RNN的核心优势是什么？",
+          "options": [
+            "模型参数更少",
+            "支持并行计算，训练效率高",
+            "不需要GPU就能运行",
+            "只能处理英文文本"
+          ],
+          "answer": 1,
+          "explanation": "RNN必须按顺序处理序列，前一个词处理完才能处理下一个词，效率低；Transformer基于自注意力机制，所有位置可以同时计算，训练效率大幅提升。"
+        },
+        {
+          "question": "Transformer中位置编码的作用是什么？",
+          "options": [
+            "压缩模型体积",
+            "加速推理速度",
+            "让模型知道单词在句子中的位置",
+            "过滤敏感词汇"
+          ],
+          "answer": 2,
+          "explanation": "自注意力机制本身不感知位置信息（把句子打乱结果相同），位置编码通过给每个位置添加固定或可学习的向量，让模型区分'狗咬人'和'人咬狗'。"
+        },
+        {
+          "question": "GPT系列模型使用Transformer的哪个部分？",
+          "options": [
+            "只用编码器",
+            "只用解码器",
+            "编码器和解码器都用",
+            "都不用，是全新架构"
+          ],
+          "answer": 1,
+          "explanation": "GPT（Generative Pre-trained Transformer）是生成式模型，只使用解码器部分，通过自回归方式逐字生成文本；BERT则只用编码器，专注理解任务。"
+        }
+      ]
+    },
+    {
+      "id": "w8a2",
+      "title": "RAG技术入门：给AI配一个实时可查的外部大脑",
+      "author": "巫山老妖",
+      "source": "腾讯云开发者社区",
+      "date": "2026-04-13",
+      "difficulty": 1,
+      "tags": ["RAG", "入门", "知识库"],
+      "sourceUrl": "https://cloud.tencent.com/developer/article/2654878",
+      "summary": "RAG的本质是给大模型配备外部知识库，就像开卷考试——模型不需要背诵所有答案，只需要知道去哪里查、怎么查、怎么用查到的内容回答问题。",
+      "keyPoints": [
+        "RAG解决四大痛点：知识时效性（训练数据过时）、私有数据隔离、幻觉问题、答案可追溯",
+        "核心流程：用户提问 → 向量化检索相关文档 → 将文档注入Prompt → LLM基于证据生成回答",
+        "向量数据库是RAG的核心基础设施，常用Milvus、Pinecone、ChromaDB、Weaviate",
+        "混合检索（向量+关键词BM25）效果优于纯向量检索，黄金比例约0.7:0.3"
+      ],
+      "quiz": [
+        {
+          "question": "RAG技术主要解决大模型的哪个核心问题？",
+          "options": [
+            "模型推理速度太慢",
+            "无法处理中文",
+            "知识过时和幻觉问题",
+            "模型文件太大"
+          ],
+          "answer": 2,
+          "explanation": "大模型的知识截止于训练数据，无法获取最新信息且可能编造答案。RAG通过实时检索外部知识库，让模型基于真实文档生成回答，解决时效性和幻觉问题。"
+        },
+        {
+          "question": "RAG系统的检索流程正确顺序是？",
+          "options": [
+            "直接生成 → 检索验证 → 输出结果",
+            "用户提问 → 检索文档 → 注入Prompt → LLM生成",
+            "用户提问 → LLM理解 → 检索 → 再生成",
+            "检索文档 → 用户确认 → LLM生成"
+          ],
+          "answer": 1,
+          "explanation": "标准RAG流程：用户提问后，先将问题向量化并检索相关文档，然后把检索到的文档作为上下文注入Prompt，最后LLM基于这些证据生成回答。"
+        },
+        {
+          "question": "混合检索中向量检索和关键词检索的推荐比例是？",
+          "options": [
+            "1:1 各占一半",
+            "0.7:0.3（向量为主）",
+            "0.3:0.7（关键词为主）",
+            "只用向量检索即可"
+          ],
+          "answer": 1,
+          "explanation": "实践表明，向量检索擅长语义理解，关键词检索擅长精确匹配。混合检索黄金比例约0.7:0.3，向量为主确保语义相关性，关键词补充精确匹配。"
+        }
+      ]
+    },
+    {
+      "id": "w8a3",
+      "title": "LoRA与QLoRA微调全指南：消费级显卡也能定制大模型",
+      "author": "n1n.ai",
+      "source": "n1n.ai Blog",
+      "date": "2026-04-17",
+      "difficulty": 2,
+      "tags": ["LoRA", "QLoRA", "微调", "中等"],
+      "sourceUrl": "https://explore.n1n.ai/zh/blog/2026-nian-lora-yu-qlora-da-moxing-weitiao-quan-zhinan-2026-04-17",
+      "summary": "LoRA通过低秩矩阵分解，仅训练原模型0.1%-3%的参数即可实现专业领域定制；QLoRA在此基础上加入4bit量化，让65B模型微调仅需单张消费级显卡。",
+      "keyPoints": [
+        "LoRA核心思想：权重更新矩阵可分解为两个低秩矩阵乘积 ΔW = BA，大幅减少可训练参数",
+        "关键超参数：rank(r)控制表达能力（通常8-64），alpha(α)控制学习幅度，lora_dropout防过拟合",
+        "QLoRA三大创新：NF4量化格式、双重量化（量化常数再量化）、分页优化器处理显存峰值",
+        "显存需求对比：全参数微调7B需≥32GB，LoRA需~16GB，QLoRA仅需~8GB（4bit量化）"
+      ],
+      "quiz": [
+        {
+          "question": "LoRA微调的核心原理是什么？",
+          "options": [
+            "只训练模型最后一层",
+            "将权重更新分解为两个低秩矩阵的乘积",
+            "删除模型中不重要的参数",
+            "用更小的模型替代原模型"
+          ],
+          "answer": 1,
+          "explanation": "LoRA（Low-Rank Adaptation）的核心是将权重更新矩阵ΔW分解为两个低秩矩阵BA的乘积，只训练B和A两个小矩阵，原模型权重冻结不变，大幅减少训练参数量。"
+        },
+        {
+          "question": "QLoRA相比LoRA的主要改进是什么？",
+          "options": [
+            "训练速度更快",
+            "效果更好",
+            "通过4bit量化进一步降低显存需求",
+            "支持更多模型架构"
+          ],
+          "answer": 2,
+          "explanation": "QLoRA在LoRA基础上引入NF4量化格式，将基座模型量化到4bit精度存储，同时LoRA适配器保持全精度训练，实现显存需求进一步下降（如65B从780GB降至48GB）。"
+        },
+        {
+          "question": "LoRA中rank(r)参数的作用是什么？",
+          "options": [
+            "控制学习率大小",
+            "控制低秩矩阵的维度，影响模型表达能力",
+            "控制训练轮数",
+            "控制批量大小"
+          ],
+          "answer": 1,
+          "explanation": "rank决定低秩矩阵的秩（通常8-64），秩越大表达能力越强但参数越多。实践中r=8-16通常足够，复杂任务可提高到32-64，过大会接近全参数微调失去效率优势。"
+        }
+      ]
+    },
+    {
+      "id": "w8a4",
+      "title": "Multi-Agent多智能体协作系统：架构原理与框架选型",
+      "author": "腾讯云开发者社区",
+      "source": "腾讯云",
+      "date": "2026-04-02",
+      "difficulty": 2,
+      "tags": ["Multi-Agent", "架构", "中等"],
+      "sourceUrl": "https://cloud.tencent.com/developer/article/2649756",
+      "summary": "单Agent能力有天花板，Multi-Agent通过分工协作突破复杂任务瓶颈。核心技术三件套：ReAct执行模式、Function Calling工具调用、MCP/A2A通信协议。",
+      "keyPoints": [
+        "单Agent vs Multi-Agent：单Agent受限于上下文窗口和单一专业能力，Multi-Agent通过角色分工、并行处理突破天花板",
+        "四种核心协作模式：顺序流水线、协调器/分发器、并行扇出聚合、生成器与评判器",
+        "通信协议：MCP（Model Context Protocol）用于Agent与工具交互，A2A（Agent-to-Agent）用于Agent间通信",
+        "主流框架对比：AutoGen（微软，强异步）、CrewAI（角色扮演）、LangGraph（状态机）、MetaGPT（软件公司模拟）"
+      ],
+      "quiz": [
+        {
+          "question": "Multi-Agent系统相比单Agent的主要优势是？",
+          "options": [
+            "响应速度更快",
+            "部署成本更低",
+            "通过角色分工和并行处理突破复杂任务瓶颈",
+            "不需要大模型支持"
+          ],
+          "answer": 2,
+          "explanation": "单Agent在跨领域决策、长链路业务时会遇到上下文窗口瓶颈和专业能力局限。Multi-Agent通过多个专业Agent分工协作，实现并行处理和专业互补，适合复杂企业级任务。"
+        },
+        {
+          "question": "以下哪种不是Multi-Agent的核心协作模式？",
+          "options": [
+            "顺序流水线（Pipeline）",
+            "协调器/分发器（Orchestrator）",
+            "单点轮询（Polling）",
+            "并行扇出聚合（Fan-out/Fan-in）"
+          ],
+          "answer": 2,
+          "explanation": "Multi-Agent四大协作模式：顺序流水线（任务串行传递）、协调器/分发器（中心调度）、并行扇出聚合（并行处理后汇总）、生成器与评判器（生成-校验循环）。单点轮询是传统架构模式，不属于Agent协作范畴。"
+        },
+        {
+          "question": "MCP（Model Context Protocol）在Multi-Agent系统中的作用是？",
+          "options": [
+            "Agent间的直接通信",
+            "Agent与外部工具的标准化交互",
+            "模型训练数据传输",
+            "用户界面渲染"
+          ],
+          "answer": 1,
+          "explanation": "MCP是Agent与工具（如数据库、API、文件系统）交互的标准化协议，定义了工具描述、调用、结果返回的统一格式。Agent间通信则使用A2A（Agent-to-Agent）协议。"
+        }
+      ]
+    },
+    {
+      "id": "w8a5",
+      "title": "Prompt Engineering进阶实战：从套路到系统方法论",
+      "author": "Easton",
+      "source": "比邻技术博客",
+      "date": "2026-04-17",
+      "difficulty": 3,
+      "tags": ["Prompt Engineering", "进阶", "方法论"],
+      "sourceUrl": "https://eastondev.com/blog/zh/posts/ai/20260417-prompt-engineering-advanced-practice/",
+      "summary": "Prompt Engineering正在从零散技巧进化为系统工程。掌握Chain-of-Thought、ReAct、DSPy等进阶技术，建立可评估、可迭代的Prompt工程体系。",
+      "keyPoints": [
+        "从Prompt Engineering到Context Engineering：不只关注'怎么问'，更要设计'让AI看到什么'",
+        "思维链四阶：Zero-Shot CoT（加'让我们一步步思考'）→ Few-Shot CoT（给推理示例）→ 自洽性（多次采样取多数）→ ToT（探索多条推理路径）",
+        "ReAct模式：Reasoning（推理）+ Acting（行动）交替循环，让Agent具备规划-执行-观察-调整能力",
+        "DSPy框架：将Prompt视为可编程模块，通过编译器自动优化，实现Prompt的自动化调优"
+      ],
+      "quiz": [
+        {
+          "question": "Context Engineering与Prompt Engineering的核心区别是？",
+          "options": [
+            "Context Engineering只关注输入格式",
+            "Context Engineering更关注'让AI看到什么'而非仅仅'怎么问'",
+            "两者没有区别",
+            "Prompt Engineering更高级"
+          ],
+          "answer": 1,
+          "explanation": "Prompt Engineering聚焦'如何提问'，Context Engineering则是更广泛的系统设计，包括决定哪些信息应该出现在上下文中、如何组织、如何动态调整，本质是设计AI的'可见世界'。"
+        },
+        {
+          "question": "ReAct模式的核心思想是什么？",
+          "options": [
+            "只进行推理不执行行动",
+            "推理（Reasoning）和行动（Acting）交替循环",
+            "先执行所有行动再推理",
+            "让用户来决定下一步"
+          ],
+          "answer": 1,
+          "explanation": "ReAct将推理和行动交织进行：Agent先思考下一步该做什么（Reasoning），然后执行（Acting），观察结果后再思考调整，形成思考-行动-观察的循环，让Agent具备动态规划能力。"
+        },
+        {
+          "question": "思维链（Chain-of-Thought）的自洽性方法是什么？",
+          "options": [
+            "只采样一次取最佳答案",
+            "多次采样，取出现最多的答案",
+            "人工审核每个答案",
+            "自动删除错误答案"
+          ],
+          "answer": 1,
+          "explanation": "自洽性（Self-Consistency）是CoT的增强：对同一问题多次采样生成不同的推理路径和答案，然后统计哪个答案出现次数最多，以此提高答案的可靠性，代价是需要更多推理次数。"
+        }
+      ]
+    }
+  ],
+  "totalQuestions": 15,
+  "passScore": 80,
+  "nextUpdateDate": "2026-04-21"
+}
